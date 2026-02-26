@@ -28,6 +28,6 @@
 		<IMG SRC="https://crystalpalace.web.fc2.com/manual/startrek.png" ALT="StarTrek" WIDTH="480">
 	</TD></TR>
 	<TR><TD>
-		<IMG SRC="https://crystalpalace.web.fc2.com/manual/mandel.png" ALT="Mandel" WIDTH="480">
+		<IMG SRC="https://crystalpalace.web.fc2.com/specific/mandel.png" ALT="グラフィック画面" WIDTH="480">
 	</TD></TR>
 </TABLE>
