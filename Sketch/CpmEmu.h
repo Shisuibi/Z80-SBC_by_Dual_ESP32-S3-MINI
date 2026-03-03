@@ -225,7 +225,8 @@ static void SpiSdcDirFileName(Uint08 iUser, Uint08* pFileName) {
 		else															DirEntryRecord.aiFileName[i] = pSdcUserDirName[0x10];
 	}
 
-	pFileName++;
+	while((*pFileName != pSdcUserDirName[0x11])&&(*pFileName != NUL)) pFileName++;
+	if(*pFileName == pSdcUserDirName[0x11]) pFileName++;
 
 	if(*pFileName != NUL)	DirEntryRecord.iFileType0 = *(pFileName++);
 	else					DirEntryRecord.iFileType0 = pSdcUserDirName[0x10];
@@ -244,7 +245,7 @@ static void SpiSdcPosFileName(Uint08* pFileName) {
 		if(DirEntryRecord.aiFileName[i] != pSdcUserDirName[0x10]) *(pFileName++) = DirEntryRecord.aiFileName[i];
 	}
 
-	*(pFileName++) = pSdcUserDirName[0x11];
+	if(DirEntryRecord.iFileType0 != pSdcUserDirName[0x10]) *(pFileName++) = pSdcUserDirName[0x11];
 
 	if(DirEntryRecord.iFileType0 != pSdcUserDirName[0x10]) *(pFileName++) = DirEntryRecord.iFileType0;
 	if(DirEntryRecord.iFileType1 != pSdcUserDirName[0x10]) *(pFileName++) = DirEntryRecord.iFileType1;
@@ -764,7 +765,7 @@ static void CpmEmuMove(void) {
 	iSdcBasicSize -= iSerialCountDx;	MultiSend();
 	if(iSdcBasicSize > 0) return;
 
-	SdcBasicFile.close();	iSynchWait = False;
+	SdcBasicFile.close();	iSynchWait = False;			//	BASICファイル読込Slave側Wait解除（変更禁止）
 	SdcBusyLow();	MultiData(CodeTelSdcBusy);
 }
 //==============================================================================//

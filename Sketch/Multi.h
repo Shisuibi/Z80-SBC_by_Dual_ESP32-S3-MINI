@@ -153,7 +153,7 @@ static void MultiBleUart(void) {
 }
 //------------------------------------------------------------------------------//
 static void MultiSdcBusy(void) {
-	iSynchWait = False;
+	iSynchWait = False;									//	BASICファイル読込Master側Wait解除（変更禁止）
 	SdcBusyLow();
 }
 //------------------------------------------------------------------------------//
