@@ -836,7 +836,7 @@ static void VportInit(void) {
 }
 //------------------------------------------------------------------------------//
 static void VportMove(void) {
-	if(iResetRequest != False) return;
+	if(iResetRequest != ResetModeStandBy) return;
 
 	if(Esp32Master) VportShift();
 	while((* apVportPioMode[iCurrPioMode])());

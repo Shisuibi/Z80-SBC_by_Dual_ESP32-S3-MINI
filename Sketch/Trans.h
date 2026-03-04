@@ -230,7 +230,7 @@ static void TransChangeHist(Uint08 iPioHist) {
 
 //==============================================================================//
 static void TransSysReset(void) {
-	iResetRequest = True;
+	iResetRequest = ResetModeSynchWait;
 }
 //------------------------------------------------------------------------------//
 static void TransMsgDisp(void) {

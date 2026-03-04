@@ -11,6 +11,14 @@
 
 
 //==============================================================================//
+enum {
+	ResetModeStandBy  ,									//	再起動モード（待機）
+	ResetModeSynchWait,									//	再起動モード（同期）
+	ResetModeBootExec ,									//	再起動モード（実行）
+
+	ResetModeMax,										//	再起動モード上限
+};
+//------------------------------------------------------------------------------//
 #define		CpuCtrlHALT					0x80			//	CPU制御ビット（HALT）
 #define		CpuCtrlBSAK					0x40			//	CPU制御ビット（BUSACK）
 
@@ -22,8 +30,6 @@
 
 #define		CpuCtrlWR					0x02			//	CPU制御ビット（WR）
 #define		CpuCtrlRD					0x01			//	CPU制御ビット（RD）
-//------------------------------------------------------------------------------//
-#define		ResetExecMode				0x02			//	リセット実行モード
 //------------------------------------------------------------------------------//
 static Sint08 iResetRequest;							//	リセット要求
 //==============================================================================//
@@ -121,11 +127,11 @@ static void ResetInit(void) {
 	ResetGpio(False);
 	ResetCtrl(False);
 
-	iResetRequest = True;
+	iResetRequest = ResetModeSynchWait;
 }
 //------------------------------------------------------------------------------//
 static void ResetMove(void) {
-	if(iResetRequest != ResetExecMode) return;
+	if(iResetRequest != ResetModeBootExec) return;
 
 	ResetGpio(True);
 	ResetCtrl(True);
@@ -142,7 +148,7 @@ static void ResetMove(void) {
 	else				iCpmBiosParamL = SpiSdcAutoExecFile();
 
 	TransMessage(pTransSysReset);
-	iResetRequest = False;
+	iResetRequest = ResetModeStandBy;
 }
 //==============================================================================//
 
