@@ -285,7 +285,7 @@ static Uint08 SpiSdcAutoExecFile(void) {
 	Uint16 iEntry;
 
 	SpiSdcDirFileName(0x00, (Uint08*)pSdcAutoExecFileName);
-	SdcCpmDiskFile.seek(iCpmBaseDrive);
+	SdcCpmDiskFile.seek(0x00000000);
 
 	for(iEntry = 0;iEntry < CpmDiskEntryMax;iEntry++) {
 		SdcCpmDiskFile.read(&DirExtentRecord, sizeof(SdcDirEntry));
@@ -568,9 +568,9 @@ static void CpmEmuCcprMove(void) {
 }
 //------------------------------------------------------------------------------//
 static void CpmEmuCcprExit(void) {
-	if(Esp32Slave) {
-		MultiData(CodeTelAutoExec);
-		MultiData(iCpmBiosParamL);
+	if((Esp32Slave)&&(iCpmBiosParamL != False)) {
+		iCpmBiosParamL = SpiSdcAutoExecFile();
+		MultiData(CodeTelAutoExec);		MultiData(iCpmBiosParamL);
 	}
 
 	iCurrCpmMode = CpmModeBdosInit;

@@ -185,7 +185,7 @@
   0100                	ORG		0100H
                       	;/------------------------------------------------------------------------------/;
   0100                	CpmBiosEntry:
-  0100  C399F4        		JP		CpmBiosBaseAdrs + CpmBiosBoot    - CpmBiosEntry
+  0100  C398F4        		JP		CpmBiosBaseAdrs + CpmBiosBoot    - CpmBiosEntry
   0103  C3CEF4        		JP		CpmBiosBaseAdrs + CpmBiosWBoot   - CpmBiosEntry
   0106  C3D3F4        		JP		CpmBiosBaseAdrs + CpmBiosConSt   - CpmBiosEntry
   0109  C3D6F4        		JP		CpmBiosBaseAdrs + CpmBiosConIn   - CpmBiosEntry
@@ -215,7 +215,7 @@
   0204  0E31          		LD		C, PortUartData
                       	;/------------------------------------------------------------------------------/;
   0206                	CpmMakeDisp1or2:
-  0206  21DDF3        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgTop - CpmBiosEntry
+  0206  21DCF3        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgTop - CpmBiosEntry
   0209  067F          		LD		B, CpmMakeMsgAtoP - CpmMakeMsgTop
   020B  EDB3          		OTIR
                       	;/------------------------------------------------------------------------------/;
@@ -232,7 +232,7 @@
   0217                	CpmMakeDispNum1:
   0217  CD5DF3        		CALL	CpmBiosBaseAdrs + CpmMakeDiskMove - CpmBiosEntry
                       	
-  021A  2104F4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgNum1 - CpmBiosEntry
+  021A  2103F4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgNum1 - CpmBiosEntry
   021D  061D          		LD		B, CpmMakeMsgNum2 - CpmMakeMsgNum1
   021F  EDB3          		OTIR
                       	
@@ -241,12 +241,12 @@
   0223                	CpmMakeDispNum2:
   0223  CD5DF3        		CALL	CpmBiosBaseAdrs + CpmMakeDiskMove - CpmBiosEntry
                       	
-  0226  2121F4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgNum2 - CpmBiosEntry
+  0226  2120F4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgNum2 - CpmBiosEntry
   0229  061D          		LD		B, CpmMakeMsg1or2 - CpmMakeMsgNum2
   022B  EDB3          		OTIR
                       	;/------------------------------------------------------------------------------/;
   022D                	CpmMakeDispAtoP:
-  022D  215CF4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgAtoP - CpmBiosEntry
+  022D  215BF4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgAtoP - CpmBiosEntry
   0230  0626          		LD		B, CpmMakeMsgYorN - CpmMakeMsgAtoP
   0232  EDB3          		OTIR
                       	;/------------------------------------------------------------------------------/;
@@ -267,7 +267,7 @@
   0244                	CpmMakeDispYorN:
   0244  CD5DF3        		CALL	CpmBiosBaseAdrs + CpmMakeDiskMove - CpmBiosEntry
                       	
-  0247  2182F4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgYorN - CpmBiosEntry
+  0247  2181F4        		LD		HL, CpmBiosBaseAdrs + CpmMakeMsgYorN - CpmBiosEntry
   024A  0617          		LD		B, CpmMakeMsgBtm - CpmMakeMsgYorN
   024C  EDB3          		OTIR
                       	;/------------------------------------------------------------------------------/;
@@ -316,47 +316,47 @@
   02CD                	CpmBiosMsgBtm:
                       	;/------------------------------------------------------------------------------/;
   02CD                	CpmBiosSubTop:
-  02CD  5355424D495420		DB		"SUBMIT AUTOEXEC", NUL
-  02DD                	CpmBiosSubBtm:
+  02CD  5355424D495420		DB		"SUBMIT AUTOEXEC"
+  02DC                	CpmBiosSubBtm:
                       	;/------------------------------------------------------------------------------/;
-  02DD                	CpmMakeMsgTop:
-  02DD  0D0A          		DB		CR, LF
-  02DF  3C3C3C3C204350		DB		"<<<< CP/M Disk Image Manager >>>>", CR, LF
-  0302  0D0A          		DB		CR, LF
-  0304                	CpmMakeMsgNum1:
-  0304  312E204D532D44		DB		"1. MS-DOS FAT -> CP/M Image", CR, LF
-  0321                	CpmMakeMsgNum2:
-  0321  322E2043502F4D		DB		"2. CP/M Image -> MS-DOS FAT", CR, LF
-  033E                	CpmMakeMsg1or2:
-  033E  0D0A          		DB		CR, LF
-  0340  57686963682064		DB		"Which do you want (1 or 2)? "
-  035C                	CpmMakeMsgAtoP:
-  035C  0D0A          		DB		CR, LF
-  035E  57686963682064		DB		"Which drive is it (A to P / All:Z)? "
-  0382                	CpmMakeMsgYorN:
-  0382  41726520796F75		DB		"Are you sure (Y or N)? "
-  0399                	CpmMakeMsgBtm:
+  02DC                	CpmMakeMsgTop:
+  02DC  0D0A          		DB		CR, LF
+  02DE  3C3C3C3C204350		DB		"<<<< CP/M Disk Image Manager >>>>", CR, LF
+  0301  0D0A          		DB		CR, LF
+  0303                	CpmMakeMsgNum1:
+  0303  312E204D532D44		DB		"1. MS-DOS FAT -> CP/M Image", CR, LF
+  0320                	CpmMakeMsgNum2:
+  0320  322E2043502F4D		DB		"2. CP/M Image -> MS-DOS FAT", CR, LF
+  033D                	CpmMakeMsg1or2:
+  033D  0D0A          		DB		CR, LF
+  033F  57686963682064		DB		"Which do you want (1 or 2)? "
+  035B                	CpmMakeMsgAtoP:
+  035B  0D0A          		DB		CR, LF
+  035D  57686963682064		DB		"Which drive is it (A to P / All:Z)? "
+  0381                	CpmMakeMsgYorN:
+  0381  41726520796F75		DB		"Are you sure (Y or N)? "
+  0398                	CpmMakeMsgBtm:
                       	;/==============================================================================/;
                       	
                       	
                       	;/==============================================================================/;
-  0399                	CpmBiosBoot:
-  0399  2103F2        		LD		HL, CpmBiosBaseAdrs + 0003H
-  039C  220100        		LD		(CpmWarmBoot + 0001H), HL
+  0398                	CpmBiosBoot:
+  0398  2103F2        		LD		HL, CpmBiosBaseAdrs + 0003H
+  039B  220100        		LD		(CpmWarmBoot + 0001H), HL
                       	;/------------------------------------------------------------------------------/;
-  039F                	CpmBiosInit:
-  039F  AF            		XOR		A
-  03A0  320300        		LD		(CpmIoByte), A
-  03A3  320400        		LD		(CpmDriveUser), A
+  039E                	CpmBiosInit:
+  039E  AF            		XOR		A
+  039F  320300        		LD		(CpmIoByte), A
+  03A2  320400        		LD		(CpmDriveUser), A
                       	;/------------------------------------------------------------------------------/;
-  03A6                	CpmBiosDisp:
-  03A6  216FF3        		LD		HL, CpmBiosBaseAdrs + CpmBiosMsgTop - CpmBiosEntry
-  03A9  065E          		LD		B, CpmBiosMsgBtm - CpmBiosMsgTop
-  03AB  0E31          		LD		C, PortUartData
-  03AD  EDB3          		OTIR
+  03A5                	CpmBiosDisp:
+  03A5  216FF3        		LD		HL, CpmBiosBaseAdrs + CpmBiosMsgTop - CpmBiosEntry
+  03A8  065E          		LD		B, CpmBiosMsgBtm - CpmBiosMsgTop
+  03AA  0E31          		LD		C, PortUartData
+  03AC  EDB3          		OTIR
                       	;/------------------------------------------------------------------------------/;
-  03AF                	CpmBiosMove:
-  03AF  AF            		XOR		A
+  03AE                	CpmBiosMove:
+  03AE  3E01          		LD		A, 01H
   03B0  D380          		OUT		(PortBiosWBoot), A
                       	
   03B2  DB02          		IN		A, (PortBiosParamL)
@@ -365,7 +365,7 @@
                       	
   03B8  21CDF3        		LD		HL, CpmBiosBaseAdrs + CpmBiosSubTop - CpmBiosEntry
   03BB  1108DC        		LD		DE, CpmCcprBaseAdrs + 0008H
-  03BE  011000        		LD		BC, CpmBiosSubBtm - CpmBiosSubTop
+  03BE  010F00        		LD		BC, CpmBiosSubBtm - CpmBiosSubTop
                       	
   03C1  79            		LD		A, C
   03C2  3207DC        		LD		(CpmCcprBaseAdrs + 0007H), A

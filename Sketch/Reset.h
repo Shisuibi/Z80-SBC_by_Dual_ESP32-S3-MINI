@@ -144,10 +144,9 @@ static void ResetMove(void) {
 	VportInit();
 	SpiLcdInit(True);
 
-	if(Esp32Master)		ResetExec();
-	else				iCpmBiosParamL = SpiSdcAutoExecFile();
-
+	if(Esp32Master) ResetExec();
 	TransMessage(pTransSysReset);
+
 	iResetRequest = ResetModeStandBy;
 }
 //==============================================================================//

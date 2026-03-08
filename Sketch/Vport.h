@@ -518,7 +518,7 @@ static void VportBiosWBoot(void) {
 	if(PioInput) iPioDataBus = 0x00;
 	else {
 		if(Esp32Master) iReleaseCpuBus = False;
-		iCurrCpmMode = CpmModeCcprInit;
+		iCpmBiosParamL = iPioDataBus;	iCurrCpmMode = CpmModeCcprInit;
 	}
 }
 //------------------------------------------------------------------------------//

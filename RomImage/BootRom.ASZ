@@ -315,7 +315,7 @@ CpmBiosMsgTop:
 CpmBiosMsgBtm:
 ;/------------------------------------------------------------------------------/;
 CpmBiosSubTop:
-	DB		"SUBMIT AUTOEXEC", NUL
+	DB		"SUBMIT AUTOEXEC"
 CpmBiosSubBtm:
 ;/------------------------------------------------------------------------------/;
 CpmMakeMsgTop:
@@ -355,7 +355,7 @@ CpmBiosDisp:
 	OTIR
 ;/------------------------------------------------------------------------------/;
 CpmBiosMove:
-	XOR		A
+	LD		A, 01H
 	OUT		(PortBiosWBoot), A
 
 	IN		A, (PortBiosParamL)
