@@ -23,7 +23,7 @@
 		</TD><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/gallery/exterior.jpg" ALT="実機外観" WIDTH="480">
 		</TD><TD>
-			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/trekinst.png" ALT="TrekInst" WIDTH="480">
+			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/melody.png" ALT="Melody" WIDTH="480">
 		</TD></TR>
 		<TR><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/download/makedisk.png" ALT="MakeDisk呼出" WIDTH="480">
