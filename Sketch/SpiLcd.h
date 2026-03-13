@@ -40,6 +40,7 @@
 
 //==============================================================================//
 static LGFX SpiLCD;										//	LGFX識別子（SPI2）
+static LGFX_Sprite Canvas(&SpiLCD);						//	LGFX識別子（スプライト）
 
 static Sint08 iCurrLcdMode;								//	現行液晶表示モード
 static Uint08 iLcdBrightness;							//	液晶表示LED輝度
@@ -152,8 +153,6 @@ static void SpiLcdStarLogo(void) {
 	LcdBitMapFile = SD.open(pLcdStarLogoFileName, O_RDONLY);
 	LcdBitMapFile.read(aiBitMapHead, LcdBitMapHeadSize);
 
-	SpiLCD.setSwapBytes(True);
-
 	for(iPosY = (LcdScrnPixelY - 1);iPosY >= 0;iPosY--) {
 		LcdBitMapFile.read(aiBitMapBuff, LcdScrnPixelX * 3);
 		SpiLCD.pushImage(0, iPosY, LcdScrnPixelX, 1, (void*)aiBitMapBuff);
@@ -213,6 +212,11 @@ static void SpiLcdGrpClear(void) {
 static void SpiLcdGraphic(void) {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+/*@@@@
+	SpiLCD.startWrite();
+	Canvas.pushSprite(LcdScrnPixelX >> 3, LcdScrnPixelY >> 3);
+	SpiLCD.endWrite();
+@@@@*/
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
@@ -473,31 +477,27 @@ static void SpiLcdInit(Sint08 iReset) {
 	iCurrLcdMode = False;
 	iLcdSegMicros = iLcdSorMicros = micros();
 
-	iLcdBrightness = 0x80;
-	iLcdRgbC0 = iLcdRgbC1 = 0x0000;
-
-	iLcdRotation = LcdStdRotation;
-	iLcdTextSize = 1;
+	iLcdBrightness = 0x80;	iLcdRgbC0 = iLcdRgbC1 = 0x0000;
+	iLcdRotation = LcdStdRotation;	iLcdTextSize = 1;
 
 	iLcdPosX0 = iLcdPosY0 = iLcdPosX1 = iLcdPosY1 = 0;
 	iLcdDisX2 = iLcdDisY2 = iLcdRadX3 = iLcdRadY3 = 0;
 
 	if(Esp32Master) return;
 
-	if(iReset == False) SpiLCD.init();
-	SpiLCD.setBrightness(iLcdBrightness);
+	if(iReset == False) {
+		SpiLCD.init();	SpiLCD.setSwapBytes(True);
+		Canvas.createSprite((LcdScrnPixelX * 3) >> 2, (LcdScrnPixelY * 3) >> 2);
+	}
 
-	SpiLCD.setRotation(iLcdRotation);
-	SpiLCD.setTextSize(iLcdTextSize);
+	SpiLCD.setBrightness(iLcdBrightness);
+	SpiLCD.setRotation(iLcdRotation);	SpiLCD.setTextSize(iLcdTextSize);
 
 	if(iReset == False) {
-		SpiLcdSegReset();
-		SpiLcdBtnReset();
-
+		SpiLcdSegReset();	SpiLcdBtnReset();
 		if(SpiLCD.touch()) SpiLcdTchReset();
 
-		SpiLcdStarLogo();
-		delay(2000);
+		SpiLcdStarLogo();	delay(2000);
 	}
 }
 //------------------------------------------------------------------------------//
@@ -507,14 +507,11 @@ static void SpiLcdMove(void) {
 
 	if(Esp32Master) {
 		if(LcdUpdtRead() != False) {
-			MultiData(CodeTelLcdUpdt);
-			MultiData(iCpuPortBus);		MultiData(iCpuDataBus);
-			LcdUpdtLow();
+			MultiData(CodeTelLcdUpdt);	MultiData(iCpuPortBus);		MultiData(iCpuDataBus);		LcdUpdtLow();
 		}
 
-		if((iMicros - iLcdSegMicros) > LcdSegInterval) {
-			iLcdSegMicros = iMicros;	LcdUpdtHigh();
-		}
+		if(iLcdMode != iCurrLcdMode) iCurrLcdMode = iLcdMode;
+		if((LcdModeSegment)&&((iMicros - iLcdSegMicros) > LcdSegInterval)) {	iLcdSegMicros = iMicros;	LcdUpdtHigh();	}
 
 		return;
 	}
@@ -523,29 +520,17 @@ static void SpiLcdMove(void) {
 		iCurrLcdMode = iLcdMode;
 
 		if(LcdModeGraphic) {
-			SpiLCD.setRotation(iLcdRotation);
-			SpiLCD.setTextSize(iLcdTextSize);
-			SpiLCD.fillScreen(iLcdRgbC1);
-
-			SpiLcdGrpClear();
-			LcdUpdtLow();
+			SpiLCD.setRotation(iLcdRotation);	SpiLCD.setTextSize(iLcdTextSize);
+			SpiLCD.fillScreen(iLcdRgbC1);	SpiLcdGrpClear();	LcdUpdtLow();
 		} else {
-			SpiLCD.setRotation(LcdStdRotation);
-			SpiLCD.setTextSize(1);
-			SpiLCD.fillScreen(TFT_BLACK);
-
-			SpiLcdSegClear();
-			SpiLcdBtnClear();
-			SpiLcdSorClear();
+			SpiLCD.setRotation(LcdStdRotation);		SpiLCD.setTextSize(1);
+			SpiLCD.fillScreen(TFT_BLACK);	SpiLcdSegClear();	SpiLcdBtnClear();	SpiLcdSorClear();
 		}
 	}
 
-	if(LcdModeGraphic) {	SpiLcdGraphic();	return;		}
+	if(LcdModeGraphic) {	SpiLcdGraphic();	LcdUpdtLow();	return;		}
 	if(LcdUpdtRead() != False) {	SpiLcdSegment();	SpiLcdButton();		LcdUpdtLow();	}
-
-	if((iMicros - iLcdSorMicros) > LcdSorInterval) {
-		iLcdSorMicros = iMicros;	SpiLcdSorcerian();
-	}
+	if((iMicros - iLcdSorMicros) > LcdSorInterval) {	iLcdSorMicros = iMicros;	SpiLcdSorcerian();	}
 }
 //==============================================================================//
 

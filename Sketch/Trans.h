@@ -355,7 +355,7 @@ static Sint08 TransInterval(void) {
 }
 //------------------------------------------------------------------------------//
 static void TransWrite(void) {
-	Uint08 *pData;
+	Uint08* pData;
 	Uint16 iSize;
 
 	if((iSerialTxWr != iSerialTxRd)&&(TransInterval() != False)) {
@@ -404,8 +404,8 @@ static void TransInit(void) {
 	Serial.setTxBufferSize(SerialBufSizeTx);
 	Serial.begin(SerialBaudRateTx, SERIAL_8N1, GpioUa0Rxd, GpioUa0Txd);
 
-	TransClear();
-	iBleAdvtReq = True;
+	delay(100);		MultiFlush();	delay(100);
+	TransClear();	iBleAdvtReq = True;
 
 	iSerialMicros = micros();
 	if(Esp32Master) TransBleStart();

@@ -26,9 +26,50 @@
 
 
 //==============================================================================//
+static void MatrixGraphic(void) {
+	static Uint16 aiColor[4][6] = {
+		{	TFT_BLACK,	TFT_NAVY,		TFT_DARKGREEN,	TFT_DARKCYAN,	TFT_MAROON,		TFT_PURPLE,			},
+		{	TFT_OLIVE,	TFT_LIGHTGREY,	TFT_DARKGREY,	TFT_BLUE,		TFT_GREEN,		TFT_CYAN,			},
+		{	TFT_RED,	TFT_MAGENTA,	TFT_YELLOW,		TFT_WHITE,		TFT_ORANGE,		TFT_GREENYELLOW,	},
+		{	TFT_PINK,	TFT_BROWN,		TFT_GOLD,		TFT_SILVER,		TFT_SKYBLUE,	TFT_VIOLET,			},
+	};
+	Sint16 i, j;
+
+	SpiLCD.startWrite();
+
+	for(i = 0;i < 4;i++) {
+		for(j = 0;j < 6;j++) {
+			Canvas.writeFillRect(j * 60, i * 60, 60, 60, aiColor[i][j]);
+		}
+	}
+
+	SpiLCD.endWrite();
+}
+//------------------------------------------------------------------------------//
+static void MatrixFrameRate(void) {
+	static Uint32 iCount = 0;
+	static Uint32 iFrame = 0;
+	static Uint32 iMatrixMicros = 0;
+
+	Uint32 iMicros = micros();
+	if((Esp32Master)||(LcdModeSegment)) return;
+
+	iFrame += 1000000 / (iMicros - iMatrixMicros);
+	iMatrixMicros = iMicros;
+
+	if(++iCount >= 100) {
+		Serial.printf("[FPS %02X]", iFrame / 100);
+		iCount = iFrame = 0;
+	}
+}
+//==============================================================================//
+
+
+//==============================================================================//
 static void MatrixInit(void) {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	MatrixGraphic();
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
@@ -36,6 +77,9 @@ static void MatrixInit(void) {
 static void MatrixMove(void) {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+/*@@@@
+	MatrixFrameRate();
+@@@@*/
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
