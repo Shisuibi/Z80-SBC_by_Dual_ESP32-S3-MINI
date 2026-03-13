@@ -46,20 +46,20 @@ static Sint08 IsPioStandBy(void);
 static Sint08 iCurrPioMode;								//	現行PIOモード
 static Sint08 iReleaseCpuBus;							//	CPUバス開放
 //------------------------------------------------------------------------------//
-static Uint16 iRomTransAdrs;							//	ROM転送アドレス
+static Uint16 iRomImageAdrs;							//	ROM読込アドレス
 //==============================================================================//
 
 
 //==============================================================================//
 static void VportMakeDisk(void) {
 	if(PioInput) {
-				if((iRomTransAdrs >= 0x0000)&&(iRomTransAdrs < 0x0100))
-					iPioDataBus = pgm_read_byte(aiRomBootImage + 0x0000 + iRomTransAdrs);
-		else	if((iRomTransAdrs >= 0x0100)&&(iRomTransAdrs < CpmBiosBaseAdrs))
+				if((iRomImageAdrs >= 0x0000)&&(iRomImageAdrs < 0x0100))
+					iPioDataBus = pgm_read_byte(aiRomBootImage + 0x0000 + iRomImageAdrs);
+		else	if((iRomImageAdrs >= 0x0100)&&(iRomImageAdrs < CpmBiosBaseAdrs))
 					iPioDataBus = 0xFF;
-		else	if((iRomTransAdrs >= CpmBiosBaseAdrs)&&(iRomTransAdrs <= 0xFFFF))
-					iPioDataBus = pgm_read_byte(aiRomBootImage + 0x0100 + iRomTransAdrs - CpmBiosBaseAdrs);
-		iRomTransAdrs++;
+		else	if((iRomImageAdrs >= CpmBiosBaseAdrs)&&(iRomImageAdrs <= 0xFFFF))
+					iPioDataBus = pgm_read_byte(aiRomBootImage + 0x0100 + iRomImageAdrs - CpmBiosBaseAdrs);
+		iRomImageAdrs++;
 	} else {
 		if((iCpmBiosParamH == '1')||(iCpmBiosParamH == '2')) {
 			if(Esp32Master) iReleaseCpuBus = False;
@@ -78,7 +78,7 @@ static void VportBiosParamL(void) {
 	if(PioInput) iPioDataBus = iCpmBiosParamL;
 	else {
 		iCpmBiosParamL = iPioDataBus;
-		iRomTransAdrs = (iRomTransAdrs & 0xFF00) | (((Uint16)iPioDataBus) << 0);
+		iRomImageAdrs = (iRomImageAdrs & 0xFF00) | (((Uint16)iPioDataBus) << 0);
 	}
 }
 //------------------------------------------------------------------------------//
@@ -86,7 +86,7 @@ static void VportBiosParamH(void) {
 	if(PioInput) iPioDataBus = iCpmBiosParamH;
 	else {
 		iCpmBiosParamH = iPioDataBus;
-		iRomTransAdrs = (iRomTransAdrs & 0x00FF) | (((Uint16)iPioDataBus) << 8);
+		iRomImageAdrs = (iRomImageAdrs & 0x00FF) | (((Uint16)iPioDataBus) << 8);
 	}
 }
 //------------------------------------------------------------------------------//
@@ -831,7 +831,7 @@ static void VportInit(void) {
 	iPioPortBus = PortStandBySlave;
 	iPioDataBus = 0x00;
 
-	iReleaseCpuBus = True;	iRomTransAdrs = 0x0000;
+	iReleaseCpuBus = True;	iRomImageAdrs = 0x0000;
 	iPioHistD01 = iPioHistD02 = iPioHistD03 = 0x00;
 }
 //------------------------------------------------------------------------------//
