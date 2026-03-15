@@ -33,21 +33,27 @@ static Sflt32 afMatrixStack[MatrixStackMax][XYZW][XYZW];	//	行列演算スタック
 
 //==============================================================================//
 static void MatrixPush(void) {
+	if(iCurrMatrix < (MatrixStackMax - 1)) iCurrMatrix++;
+}
+//------------------------------------------------------------------------------//
+static void MatrixPop(void) {
+	if(iCurrMatrix > 0) iCurrMatrix--;
+}
+//------------------------------------------------------------------------------//
+static void MatrixCopy(void) {
 	Sint08 i, j;
-	Sflt32 (* pDst)[XYZW], (* pSrc)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pSrc)[XYZW], (* pDst)[XYZW];
 
-	if(iCurrMatrix < (MatrixStackMax - 1))	pDst = afMatrixStack[++iCurrMatrix];
-	else									return;
+	if(iCurrMatrix == 0) return;
+
+	pSrc = afMatrixStack[iCurrMatrix - 1];
+	pDst = afMatrixStack[iCurrMatrix    ];
 
 	for(i = 0;i < XYZW;i++) {
 		for(j = 0;j < XYZW;j++) {
 			pDst[i][j] = pSrc[i][j];
 		}
 	}
-}
-//------------------------------------------------------------------------------//
-static void MatrixPop(void) {
-	if(iCurrMatrix > 0) iCurrMatrix--;
 }
 //------------------------------------------------------------------------------//
 static void MatrixUnit(void) {
@@ -67,70 +73,64 @@ static void MatrixPers(Sflt32 fRad, Sflt32 fNea, Sflt32 fFar) {
 	Sflt32 fDis = fFar - fNea;
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
 
-	pMat[X][X] = fPer;	pMat[X][Y] = 0.0;	pMat[X][Z] = 0.0;							pMat[X][W] = 0.0;
-	pMat[Y][X] = 0.0;	pMat[Y][Y] = fPer;	pMat[Y][Z] = 0.0;							pMat[Y][W] = 0.0;
-	pMat[Z][X] = 0.0;	pMat[Z][Y] = 0.0;	pMat[Z][Z] = (fFar + fNea) / fDis;			pMat[Z][W] = 1.0;
-	pMat[W][X] = 0.0;	pMat[W][Y] = 0.0;	pMat[W][Z] = -(2.0 * fFar * fNea) / fDis;	pMat[W][W] = 0.0;
+	pMat[X][X] = fPer;	pMat[X][Y] =		pMat[X][Z] =								pMat[X][W] = 0.0;
+	pMat[Y][X] = 0.0;	pMat[Y][Y] = fPer;	pMat[Y][Z] =								pMat[Y][W] = 0.0;
+	pMat[Z][X] =		pMat[Z][Y] = 0.0;	pMat[Z][Z] =  (      fFar + fNea) / fDis;	pMat[Z][W] = 1.0;
+	pMat[W][X] =		pMat[W][Y] = 0.0;	pMat[W][Z] = -(2.0 * fFar * fNea) / fDis;	pMat[W][W] = 0.0;
 }
 //------------------------------------------------------------------------------//
 static void MatrixTrans(Sflt32* pVec) {
+	Sint08 i;
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
 
-	pMat[W][X] = pVec[X] * pMat[X][X] + pVec[Y] * pMat[Y][X] + pVec[Z] * pMat[Z][X] + pVec[W] * pMat[W][X];
-	pMat[W][Y] = pVec[X] * pMat[X][Y] + pVec[Y] * pMat[Y][Y] + pVec[Z] * pMat[Z][Y] + pVec[W] * pMat[W][Y];
-	pMat[W][Z] = pVec[X] * pMat[X][Z] + pVec[Y] * pMat[Y][Z] + pVec[Z] * pMat[Z][Z] + pVec[W] * pMat[W][Z];
-	pMat[W][W] = pVec[X] * pMat[X][W] + pVec[Y] * pMat[Y][W] + pVec[Z] * pMat[Z][W] + pVec[W] * pMat[W][W];
+	for(i = 0;i < XYZW;i++) {
+		pMat[W][i] =	pVec[X] * pMat[X][i] + pVec[Y] * pMat[Y][i] +
+						pVec[Z] * pMat[Z][i] + pVec[W] * pMat[W][i];
+	}
+}
+//------------------------------------------------------------------------------//
+static void MatrixScale(Sflt32* pVec) {
+	Sint08 i, j;
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+
+	for(i = 0;i < XYZW;i++) {
+		for(j = 0;j < XYZW;j++) {
+			pMat[i][j] =  pVec[i] * pMat[i][j];
+		}
+	}
 }
 //------------------------------------------------------------------------------//
 static void MatrixRotateX(Sflt32 fRad) {
+	Sint08 i;
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
 
-	fTmp = pMat[Y][X];	pMat[Y][X] = fCos * fTmp + fSin * pMat[Z][X];
-						pMat[Z][X] = fCos * pMat[Z][X] - fSin * fTmp;
-
-	fTmp = pMat[Y][Y];	pMat[Y][Y] = fCos * fTmp + fSin * pMat[Z][Y];
-						pMat[Z][Y] = fCos * pMat[Z][Y] - fSin * fTmp;
-
-	fTmp = pMat[Y][Z];	pMat[Y][Z] = fCos * fTmp + fSin * pMat[Z][Z];
-						pMat[Z][Z] = fCos * pMat[Z][Z] - fSin * fTmp;
-
-	fTmp = pMat[Y][W];	pMat[Y][W] = fCos * fTmp + fSin * pMat[Z][W];
-						pMat[Z][W] = fCos * pMat[Z][W] - fSin * fTmp;
+	for(i = 0;i < XYZW;i++) {
+		fTmp = pMat[Y][i];	pMat[Y][i] = fSin * pMat[Z][i] + fCos * fTmp;
+							pMat[Z][i] = fCos * pMat[Z][i] - fSin * fTmp;
+	}
 }
 //------------------------------------------------------------------------------//
 static void MatrixRotateY(Sflt32 fRad) {
+	Sint08 i;
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
 
-	fTmp = pMat[X][X];	pMat[X][X] = fCos * fTmp - fSin * pMat[Z][X];
-						pMat[Z][X] = fCos * pMat[Z][X] + fSin * fTmp;
-
-	fTmp = pMat[X][Y];	pMat[X][Y] = fCos * fTmp - fSin * pMat[Z][Y];
-						pMat[Z][Y] = fCos * pMat[Z][Y] + fSin * fTmp;
-
-	fTmp = pMat[X][Z];	pMat[X][Z] = fCos * fTmp - fSin * pMat[Z][Z];
-						pMat[Z][Z] = fCos * pMat[Z][Z] + fSin * fTmp;
-
-	fTmp = pMat[X][W];	pMat[X][W] = fCos * fTmp - fSin * pMat[Z][W];
-						pMat[Z][W] = fCos * pMat[Z][W] + fSin * fTmp;
+	for(i = 0;i < XYZW;i++) {
+		fTmp = pMat[Z][i];	pMat[Z][i] = fSin * pMat[X][i] + fCos * fTmp;
+							pMat[X][i] = fCos * pMat[X][i] - fSin * fTmp;
+	}
 }
 //------------------------------------------------------------------------------//
 static void MatrixRotateZ(Sflt32 fRad) {
+	Sint08 i;
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
 
-	fTmp = pMat[X][X];	pMat[X][X] = fCos * fTmp + fSin * pMat[Y][X];
-						pMat[Y][X] = fCos * pMat[Y][X] - fSin * fTmp;
-
-	fTmp = pMat[X][Y];	pMat[X][Y] = fCos * fTmp + fSin * pMat[Y][Y];
-						pMat[Y][Y] = fCos * pMat[Y][Y] - fSin * fTmp;
-
-	fTmp = pMat[X][Z];	pMat[X][Z] = fCos * fTmp + fSin * pMat[Y][Z];
-						pMat[Y][Z] = fCos * pMat[Y][Z] - fSin * fTmp;
-
-	fTmp = pMat[X][W];	pMat[X][W] = fCos * fTmp + fSin * pMat[Y][W];
-						pMat[Y][W] = fCos * pMat[Y][W] - fSin * fTmp;
+	for(i = 0;i < XYZW;i++) {
+		fTmp = pMat[X][i];	pMat[X][i] = fSin * pMat[Y][i] + fCos * fTmp;
+							pMat[Y][i] = fCos * pMat[Y][i] - fSin * fTmp;
+	}
 }
 //------------------------------------------------------------------------------//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
