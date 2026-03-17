@@ -113,7 +113,7 @@ static void ResetBoot(void) {
 }
 //------------------------------------------------------------------------------//
 static void ResetExec(void) {
-	ClockChange(ClockModeMax - 1);
+	ClockChange(ClockMode001MHz);
 	while(PioBusRead() != False);
 	ClockChange(ClockMode000iHz);		
 
