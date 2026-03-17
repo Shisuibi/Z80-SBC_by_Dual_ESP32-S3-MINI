@@ -156,11 +156,6 @@ static Uint16 iSdcBasicSize;							//	BASICÉtÉ@ÉCÉãï∂éöêî
 
 //==============================================================================//
 static void EspDmaInit(Sint08 iMode) {
-	if(PioBusRead() != False) {
-		BusReqLow();	ClockChange(ClockModeMax - 1);
-		while(PioBusRead() != False);	ClockChange(iPrevClkMode);
-	}
-
 	if(iMode != False) {	DataBusOutput();	DataBusWrite(0x00);		}
 	PortBusOutput();	PortBusWrite(0x00);
 

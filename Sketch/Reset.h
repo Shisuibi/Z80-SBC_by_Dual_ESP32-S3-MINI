@@ -57,7 +57,7 @@ static void ResetGpio(Sint08 iReset) {
 		}
 
 		CpuIntHigh();	CpuNmiHigh();	PioWitLow();	RamChpLow();
-		CpuWitLow();	CpuRstLow();	BusReqHigh();
+		CpuWitHigh();	CpuRstHigh();	BusReqLow();
 
 		NeoPixWrite(0x00, 0x00, 0x00);
 	} else {
@@ -113,11 +113,16 @@ static void ResetBoot(void) {
 }
 //------------------------------------------------------------------------------//
 static void ResetExec(void) {
-	DataBusInput();
-	ClockReset();
+	ClockChange(ClockModeMax - 1);
+	while(PioBusRead() != False);
+	ClockChange(ClockMode000iHz);		
 
+	CpuWitLow();
 	ResetBoot();
-	ClockReset();
+
+	CpuRstLow();
+	ClockManual(100);	ClockManual(100);	ClockManual(100);
+	CpuRstHigh();
 }
 //==============================================================================//
 
@@ -132,11 +137,11 @@ static void ResetInit(void) {
 //------------------------------------------------------------------------------//
 static void ResetMove(void) {
 	if(iResetRequest != ResetModeBootExec) return;
+	ClockChange(ClockMode000iHz);		
 
 	ResetGpio(True);
 	ResetCtrl(True);
 
-	ClockChange(0);		
 	TransClear();
 	CpmEmuInit(True);
 

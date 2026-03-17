@@ -73,7 +73,6 @@ static ClockInfo asClockInfo[ClockModeMax] = {					//	クロック情報
 };
 //------------------------------------------------------------------------------//
 static Sint08 iCurrClkMode;								//	現行発振φモード
-static Sint08 iPrevClkMode;								//	過去発振φモード
 //==============================================================================//
 
 
@@ -110,16 +109,6 @@ static void ClockManual(Uint32 iDelay) {
 	CpuClkLow();	delayMicroseconds(iDelay);
 }
 //------------------------------------------------------------------------------//
-static void ClockReset(void) {
-	CpuRstLow();
-
-	ClockManual(100);
-	ClockManual(100);
-	ClockManual(100);
-
-	CpuRstHigh();
-}
-//------------------------------------------------------------------------------//
 static void ClockStart(Sint08 iClkMode) {
 	ledcAttachChannel(GpioCpuClk, asClockInfo[iClkMode].iFreq, asClockInfo[iClkMode].iReso, ClockChannel);
 	ledcWrite(GpioCpuClk, asClockInfo[iClkMode].iDuty);
@@ -134,11 +123,10 @@ static void ClockChange(Sint08 iClkMode) {
 	if(Esp32Master) {
 		if(iCurrClkMode != ClockMode000iHz) ClockStop();
 
-		if(iClkMode != ClockMode000iHz)		ClockStart(iClkMode);
-		else								CpuClkOutput();
+		if(iClkMode == ClockMode000iHz)		{	CpuClkOutput();		CpuClkLow();	}
+		else								ClockStart(iClkMode);
 	}
 
-	iPrevClkMode = iCurrClkMode;
 	ClkModeWrite(iCurrClkMode = iClkMode);
 }
 //==============================================================================//
@@ -265,7 +253,7 @@ static void ClockTimer(void) {
 
 //==============================================================================//
 static void ClockInit(void) {
-	iCurrClkMode = iPrevClkMode = ClockMode000iHz;
+	iCurrClkMode = ClockMode000iHz;
 
 	iCurrMelNote = 0x00;
 	iCurrMelVolume = 0x80;
