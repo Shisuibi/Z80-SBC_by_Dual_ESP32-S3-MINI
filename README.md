@@ -53,9 +53,9 @@
 			<IMG SRC="https://crystalpalace.web.fc2.com/specific/mandel.png" ALT="グラフィック画面" WIDTH="480">
 		</TD></TR>
 		<TR><TD>
-			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/clocktimer.png" ALT="ClockTimer" WIDTH="480">
-		</TD><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/neopixel.png" ALT="NeoPixel" WIDTH="480">
+		</TD><TD>
+			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/clocktimer.png" ALT="ClockTimer" WIDTH="480">
 		</TD><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/melody.png" ALT="Melody" WIDTH="480">
 		</TD></TR>
