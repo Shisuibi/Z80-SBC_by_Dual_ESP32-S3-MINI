@@ -124,8 +124,8 @@ static void MatrixRotateX(Sflt32 fRad) {
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
 
 	for(i = 0;i < XYZW;i++) {
-		fTmp = pMat[Y][i];	pMat[Y][i] = fSin * pMat[Z][i] + fCos * fTmp;
-							pMat[Z][i] = fCos * pMat[Z][i] - fSin * fTmp;
+		fTmp = pMat[Y][i];	pMat[Y][i] = fCos * fTmp - fSin * pMat[Z][i];
+							pMat[Z][i] = fSin * fTmp + fCos * pMat[Z][i];
 	}
 }
 //------------------------------------------------------------------------------//
@@ -135,8 +135,8 @@ static void MatrixRotateY(Sflt32 fRad) {
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
 
 	for(i = 0;i < XYZW;i++) {
-		fTmp = pMat[Z][i];	pMat[Z][i] = fSin * pMat[X][i] + fCos * fTmp;
-							pMat[X][i] = fCos * pMat[X][i] - fSin * fTmp;
+		fTmp = pMat[Z][i];	pMat[Z][i] = fCos * fTmp - fSin * pMat[X][i];
+							pMat[X][i] = fSin * fTmp + fCos * pMat[X][i];
 	}
 }
 //------------------------------------------------------------------------------//
@@ -146,8 +146,8 @@ static void MatrixRotateZ(Sflt32 fRad) {
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
 
 	for(i = 0;i < XYZW;i++) {
-		fTmp = pMat[X][i];	pMat[X][i] = fSin * pMat[Y][i] + fCos * fTmp;
-							pMat[Y][i] = fCos * pMat[Y][i] - fSin * fTmp;
+		fTmp = pMat[X][i];	pMat[X][i] = fCos * fTmp - fSin * pMat[Y][i];
+							pMat[Y][i] = fSin * fTmp + fCos * pMat[Y][i];
 	}
 }
 //==============================================================================//
@@ -237,18 +237,19 @@ static void MatrixVertex(void) {
 }
 //------------------------------------------------------------------------------//
 static void MatrixDraw(void) {
-	Uint08 iV0, iV1, iV2;
+	Sflt32* pV0, * pV1, * pV2;
 	Sint08 i;
 
 	SpiLCD.startWrite();
 	SpiLCD.fillScreen(iLcdRgbC1);
 
 	for(i = 0;i < 12;i++) {
-		iV0 = aiModelPolygon[i][0];		iV1 = aiModelPolygon[i][1];		iV2 = aiModelPolygon[i][2];
+		pV0 = afCalcVertex[aiModelPolygon[i][0]];
+		pV1 = afCalcVertex[aiModelPolygon[i][1]];
+		pV2 = afCalcVertex[aiModelPolygon[i][2]];
 
-		SpiLCD.drawTriangle(	(Sint16)afCalcVertex[iV0][X], (Sint16)afCalcVertex[iV0][Y],
-								(Sint16)afCalcVertex[iV1][X], (Sint16)afCalcVertex[iV1][Y],
-								(Sint16)afCalcVertex[iV2][X], (Sint16)afCalcVertex[iV2][Y], aiModelMaterial[i][0]	);
+		SpiLCD.drawTriangle(	(Sint16)pV0[X], (Sint16)pV0[Y], (Sint16)pV1[X], (Sint16)pV1[Y],
+								(Sint16)pV2[X], (Sint16)pV2[Y], aiModelMaterial[i][0]	);
 	}
 
 	SpiLCD.endWrite();
