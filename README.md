@@ -6,16 +6,16 @@
 		</TD></TR>
 		<TR><TD ALIGN="Center" COLSPAN="3">
 			<SPAN STYLE="Font-Size:24px;">
-				<BR>
 				Website introducing Z80-SBC by Dual ESP32-S3-MINI<BR>
 				<A HREF="https://crystalpalace.web.fc2.com/">https://crystalpalace.web.fc2.com/</A><BR>
-				<BR>
 			</SPAN>
 		</TD></TR>
 		<TR><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/overview/pcbdesign00.png" ALT="配線設計" WIDTH="480">
-		</TD><TD>
-			<IMG SRC="https://crystalpalace.web.fc2.com/gallery/interior.jpg" ALT="実機内観" WIDTH="480">
+		</TD><TD ALIGN="Center">
+			<IMG SRC="https://crystalpalace.web.fc2.com/gallery/schematic00.png" ALT="電子回路図00" WIDTH="480">
+			<BR>
+			<IMG SRC="https://crystalpalace.web.fc2.com/document/z84c00catchum.png" ALT="Z84C00 CatChum" WIDTH="480">
 		</TD><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/overview/pcbdesign01.png" ALT="基板設計" WIDTH="480">
 		</TD></TR>
@@ -29,7 +29,7 @@
 		<TR><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/startrek.png" ALT="StarTrek" WIDTH="480">
 		</TD><TD>
-			<IMG SRC="https://crystalpalace.web.fc2.com/gallery/schematic00.png" ALT="電子回路図00" WIDTH="480">
+			<IMG SRC="https://crystalpalace.web.fc2.com/gallery/interior.jpg" ALT="実機内観" WIDTH="480">
 		</TD><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/trekinst.png" ALT="TrekInst" WIDTH="480">
 		</TD></TR>
@@ -38,8 +38,6 @@
 		</TD><TD>
 			<IMG SRC="https://crystalpalace.web.fc2.com/specific/lcdslogo.png" ALT="起動ロゴ画面" WIDTH="480">
 		</TD><TD ROWSPAN="3">
-			<IMG SRC="https://crystalpalace.web.fc2.com/document/z84c00catchum.png" ALT="Z84C00 CatChum" WIDTH="480">
-			<BR>
 			<IMG SRC="https://crystalpalace.web.fc2.com/instruct/helptext.png" ALT="HelpText" WIDTH="480">
 		</TD></TR>
 		<TR><TD>
