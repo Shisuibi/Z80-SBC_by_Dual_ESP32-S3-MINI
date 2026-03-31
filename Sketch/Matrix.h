@@ -27,16 +27,70 @@
 //==============================================================================//
 static Sint08 iCurrMatrix;								//	現行行列演算
 //------------------------------------------------------------------------------//
+static Sflt32 fAmbiLight;								//	環境光源係数
+static Sflt32 fDiffLight;								//	拡散反射係数
+
 static Sflt32 afParaLight[XYZW];						//	平行光源ベクトル
 static Sflt32 afMatrixStack[MatrixStackMax][XYZW][XYZW];	//	行列演算スタック
 //==============================================================================//
 
 
 //==============================================================================//
-static Sint08 MatrixLevel(void) {
-	return(iCurrMatrix);
+static void MatrixVecInner(Sflt32* pInr, Sflt32* pVA, Sflt32* pVB) {
+	*pInr = pVA[X] * pVB[X] + pVA[Y] * pVB[Y] + pVA[Z] * pVB[Z];
 }
 //------------------------------------------------------------------------------//
+static void MatrixVecCross(Sflt32* pCrs, Sflt32* pVA, Sflt32* pVB) {
+	pCrs[X] = pVA[Y] * pVB[Z] - pVA[Z] * pVB[Y];
+	pCrs[Y] = pVA[Z] * pVB[X] - pVA[X] * pVB[Z];
+	pCrs[Z] = pVA[X] * pVB[Y] - pVA[Y] * pVB[X];
+	pCrs[W] = 1.0;
+}
+//------------------------------------------------------------------------------//
+static void MatrixVecUnit(Sflt32* pVec) {
+	Sint08 i;
+	Sflt32 fInr;
+
+	MatrixVecInner(&fInr, pVec, pVec);
+
+	fInr = 1.0 / sqrt(fInr);	pVec[W] = 1.0;
+	for(i = 0;i < XYZ;i++) pVec[i] *= fInr;
+}
+//------------------------------------------------------------------------------//
+static void MatrixCrsVertex(Sflt32* pCrs, Sflt32* pV0, Sflt32* pV1, Sflt32* pV2) {
+	Sflt32 afVA[XYZ], afVB[XYZ];
+
+	afVA[X] = pV1[X] - pV0[X];	afVA[Y] = pV1[Y] - pV0[Y];	afVA[Z] = pV1[Z] - pV0[Z];
+	afVB[X] = pV2[X] - pV0[X];	afVB[Y] = pV2[Y] - pV0[Y];	afVB[Z] = pV2[Z] - pV0[Z];
+
+	MatrixVecCross(pCrs, afVA, afVB);
+}
+//==============================================================================//
+
+
+//==============================================================================//
+static void MatrixFlushScreen(void) {
+	SpiLCD.startWrite();
+	Canvas.pushSprite((LcdScrnPixelX - LcdCnvsPixelX) >> 1, (LcdScrnPixelY - LcdCnvsPixelY) >> 1);
+	SpiLCD.endWrite();
+}
+//------------------------------------------------------------------------------//
+static void MatrixAmbiLight(void) {
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	fDiffLight = 1.0 - (fAmbiLight = 0.5);
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+}
+//------------------------------------------------------------------------------//
+static void MatrixParaLight(void) {
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	afParaLight[X] = 8.0;	afParaLight[Y] = 8.0;	afParaLight[Z] = -8.0;	afParaLight[W] = 1.0;
+	MatrixVecUnit(afParaLight);
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+}
+//==============================================================================//
+
+
+//==============================================================================//
 static void MatrixPush(void) {
 	if(iCurrMatrix < (MatrixStackMax - 1)) iCurrMatrix++;
 }
@@ -69,27 +123,6 @@ static void MatrixCopy(void) {
 	for(i = 0;i < XYZW;i++) {
 		for(j = 0;j < XYZW;j++) {
 			pDst[i][j] = pSrc[i][j];
-		}
-	}
-}
-//------------------------------------------------------------------------------//
-static void MatrixTrans(Sflt32* pVec) {
-	Sint08 i;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
-
-	for(i = 0;i < XYZW;i++) {
-		pMat[W][i] =	pVec[X] * pMat[X][i] + pVec[Y] * pMat[Y][i] +
-						pVec[Z] * pMat[Z][i] + pVec[W] * pMat[W][i];
-	}
-}
-//------------------------------------------------------------------------------//
-static void MatrixScale(Sflt32* pVec) {
-	Sint08 i, j;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
-
-	for(i = 0;i < XYZW;i++) {
-		for(j = 0;j < XYZW;j++) {
-			pMat[i][j] =  pVec[i] * pMat[i][j];
 		}
 	}
 }
@@ -127,7 +160,7 @@ static void MatrixRotateZ(Sflt32 fRad) {
 	}
 }
 //------------------------------------------------------------------------------//
-static void MatrixMulti(Sint08 iLevel) {
+static void MatrixMultiply(Sint08 iLevel) {
 	Sint08 i, j;
 	Sflt32 (* pSrc)[XYZW], (* pDst)[XYZW];
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
@@ -141,6 +174,27 @@ static void MatrixMulti(Sint08 iLevel) {
 		for(j = 0;j < XYZW;j++) {
 			pMat[i][j] =	pDst[i][X] * pSrc[X][j] + pDst[i][Y] * pSrc[Y][j] +
 							pDst[i][Z] * pSrc[Z][j] + pDst[i][W] * pSrc[W][j];
+		}
+	}
+}
+//------------------------------------------------------------------------------//
+static void MatrixTrans(Sflt32* pVec) {
+	Sint08 i;
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+
+	for(i = 0;i < XYZW;i++) {
+		pMat[W][i] =	pVec[X] * pMat[X][i] + pVec[Y] * pMat[Y][i] +
+						pVec[Z] * pMat[Z][i] + pVec[W] * pMat[W][i];
+	}
+}
+//------------------------------------------------------------------------------//
+static void MatrixScale(Sflt32* pVec) {
+	Sint08 i, j;
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+
+	for(i = 0;i < XYZW;i++) {
+		for(j = 0;j < XYZW;j++) {
+			pMat[i][j] =  pVec[i] * pMat[i][j];
 		}
 	}
 }
@@ -165,46 +219,6 @@ static void MatrixPers(Sflt32 fRad, Sflt32 fNea, Sflt32 fFar) {
 	pMat[Y][X] = 0.0;	pMat[Y][Y] = fPer;	pMat[Y][Z] =								pMat[Y][W] = 0.0;
 	pMat[Z][X] =		pMat[Z][Y] = 0.0;	pMat[Z][Z] =  (      fFar + fNea) / fDis;	pMat[Z][W] = 1.0;
 	pMat[W][X] =		pMat[W][Y] = 0.0;	pMat[W][Z] = -(2.0 * fFar * fNea) / fDis;	pMat[W][W] = 0.0;
-}
-//==============================================================================//
-
-
-//==============================================================================//
-static void VectorInner(Sflt32* pInr, Sflt32* pVA, Sflt32* pVB) {
-	*pInr = pVA[X] * pVB[X] + pVA[Y] * pVB[Y] + pVA[Z] * pVB[Z];
-}
-//------------------------------------------------------------------------------//
-static void VectorCross(Sflt32* pCrs, Sflt32* pVA, Sflt32* pVB) {
-	pCrs[X] = pVA[Y] * pVB[Z] - pVA[Z] * pVB[Y];
-	pCrs[Y] = pVA[Z] * pVB[X] - pVA[X] * pVB[Z];
-	pCrs[Z] = pVA[X] * pVB[Y] - pVA[Y] * pVB[X];
-	pCrs[W] = 1.0;
-}
-//------------------------------------------------------------------------------//
-static void VectorUnit(Sflt32* pVec) {
-	Sint08 i;
-	Sflt32 fInr;
-
-	VectorInner(&fInr, pVec, pVec);
-
-	fInr = 1.0 / sqrt(fInr);	pVec[W] = 1.0;
-	for(i = 0;i < XYZ;i++) pVec[i] *= fInr;
-}
-//------------------------------------------------------------------------------//
-static void VectorVertex(Sflt32* pCrs, Sflt32* pV0, Sflt32* pV1, Sflt32* pV2) {
-	Sflt32 afVA[XYZ], afVB[XYZ];
-
-	afVA[X] = pV1[X] - pV0[X];	afVA[Y] = pV1[Y] - pV0[Y];	afVA[Z] = pV1[Z] - pV0[Z];
-	afVB[X] = pV2[X] - pV0[X];	afVB[Y] = pV2[Y] - pV0[Y];	afVB[Z] = pV2[Z] - pV0[Z];
-
-	VectorCross(pCrs, afVA, afVB);
-}
-//------------------------------------------------------------------------------//
-static void MatrixLight(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-	afParaLight[X] = 8.0;	afParaLight[Y] = 8.0;	afParaLight[Z] = -8.0;	afParaLight[W] = 1.0;
-	VectorUnit(afParaLight);
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
 //==============================================================================//
 
@@ -261,8 +275,8 @@ static void MatrixNormal(void) {
 		pV1 = afModelVertex[aiModelPolygon[i][1]];
 		pV2 = afModelVertex[aiModelPolygon[i][2]];
 
-		VectorVertex(afModelNormal[i], pV0, pV1, pV2);
-		VectorUnit(afModelNormal[i]);
+		MatrixCrsVertex(afModelNormal[i], pV0, pV1, pV2);
+		MatrixVecUnit(afModelNormal[i]);
 	}
 }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
@@ -270,45 +284,6 @@ static void MatrixNormal(void) {
 //------------------------------------------------------------------------------//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-/*@@@@
-60	Flush Screen
-61	Matrix Level
-62	Matrix Push
-63	Matrix Pop
-
-64	Matrix Unit
-65	Matrix Copy
-66	Matrix Trans
-67	Matrix Scale
-
-68	Matrix Rotate X
-69	Matrix Rotate Y
-6A	Matrix Rotate Z
-6B	Matrix Multi
-
-6C	Matrix Device
-6D	Matrix Pers
-6E
-6F	Parallel Light
-
-70	Model Build
-71	Model Clear
-72	Model Vertex
-73	Model Polygon
-74	Model Entry
-75	Model Shade
-76
-77
-
-78	Pos/Radi X High
-79	Pos/Radi X Low
-7A	Pos/Radi Y High
-7B	Pos/Radi Y Low
-7C	Pos/Radi Z High
-7D	Pos/Radi Z Low
-7E	Pos/Attr W High
-7F	Pos/Attr W Low
-@@@@*/
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //==============================================================================//
@@ -344,10 +319,10 @@ static void MatrixShade(void) {
 						afModelNormal[i][Z] * pMat[Z][j];
 		}
 
-		VectorInner(&fInr, afVec, afParaLight);
+		MatrixVecInner(&fInr, afVec, afParaLight);
 
-		if(fInr < 0)	fInr = 0.5;
-		else			fInr = 0.5 + 0.5 * fInr;
+		if(fInr < 0)	fInr = fAmbiLight;
+		else			fInr = fAmbiLight + fDiffLight * fInr;
 
 		for(j = 0;j < XYZW;j++) {
 			((Uint08*)(aiCalcMaterial + i))[j] = (Uint08)((Sflt32)aiModelPolygon[i][7 - j] * fInr);
@@ -366,7 +341,7 @@ static void MatrixDraw(void) {
 		pV1 = afCalcVertex[aiModelPolygon[i][1]];
 		pV2 = afCalcVertex[aiModelPolygon[i][2]];
 
-		VectorVertex(afCrs, pV0, pV2, pV1);				//	Y軸反転済（デバイス座標系）
+		MatrixCrsVertex(afCrs, pV0, pV2, pV1);			//	Y軸反転済（デバイス座標系）
 
 		if(afCrs[Z] < 0) Canvas.fillTriangle(	(Sint16)pV0[X], (Sint16)pV0[Y], (Sint16)pV1[X], (Sint16)pV1[Y],
 												(Sint16)pV2[X], (Sint16)pV2[Y], aiCalcMaterial[i]	);
@@ -404,7 +379,7 @@ static void VertexPrint(void) {
 //------------------------------------------------------------------------------//
 static void MatrixModel(void) {
 	static Uint08 iDeg = 0;
-	Sint08 iLevel = MatrixLevel();
+	Sint08 iLevel = iCurrMatrix;
 
 	MatrixCopy();
 	afCalcVertex[0][X] = 0.0;	afCalcVertex[0][Y] = 0.0;
@@ -412,12 +387,12 @@ static void MatrixModel(void) {
 	MatrixPush();
 
 	MatrixUnit();
-	MatrixRotateX(DegToRad(360.0 * ((Sflt32)iDeg   * 1.0 / 256.0)));
-	MatrixRotateY(DegToRad(360.0 * ((Sflt32)iDeg   * 2.0 / 256.0)));
-	MatrixRotateZ(DegToRad(360.0 * ((Sflt32)iDeg++ * 3.0 / 256.0)));
+	MatrixRotateX(PI * ((Sflt32)iDeg   * 1.0 / 128.0));
+	MatrixRotateY(PI * ((Sflt32)iDeg   * 2.0 / 128.0));
+	MatrixRotateZ(PI * ((Sflt32)iDeg++ * 3.0 / 128.0));
 	MatrixPush();
 
-	MatrixMulti(iLevel);
+	MatrixMultiply(iLevel);
 	MatrixEntry();
 	MatrixPop();
 
@@ -439,12 +414,6 @@ static void MatrixModel(void) {
 //==============================================================================//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-static void MatrixFlush(void) {
-	SpiLCD.startWrite();
-	Canvas.pushSprite((LcdScrnPixelX - LcdCnvsPixelX) >> 1, (LcdScrnPixelY - LcdCnvsPixelY) >> 1);
-	SpiLCD.endWrite();
-}
-//------------------------------------------------------------------------------//
 static void MatrixFrameRate(void) {
 	static Uint32 iCount = 0;
 	static Uint32 iFrame = 0;
@@ -478,17 +447,19 @@ static void MatrixInit(void) {
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	MatrixAmbiLight();
+	MatrixParaLight();
+
+	MatrixNormal();
+
 	MatrixDevice();
 	MatrixPush();
 
 	MatrixPers(DegToRad(45.0), 1.0, 100.0);
 	MatrixPush();
 
-	MatrixMulti(0);
+	MatrixMultiply(0);
 	MatrixPush();
-
-	MatrixNormal();
-	MatrixLight();
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
@@ -500,7 +471,7 @@ static void MatrixMove(void) {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 /*@@@@
 	MatrixModel();
-	MatrixFlush();
+	MatrixFlushScreen();
 @@@@*/
 
 /*@@@@
