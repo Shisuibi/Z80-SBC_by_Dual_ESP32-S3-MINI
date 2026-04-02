@@ -19,11 +19,11 @@
 
 ★概要
 
-　This is a Z80-SBC using a 10cm square PCB designed with KiCad.
+　Z80-SBC based on a 10cm square PCB designed with KiCad.
 　The CPU operates at a variable clock speed from 4Hz to 20MHz.
-　Input/output is handled by dual ESP32-S3 units.
+　Input/output are handled by dual ESP32-S3 modules.
 　It has a USB wired connection to a PC and a BLE wireless connection to an iPhone.
-　It features an IPS-LCD, microSD memory card, and an 88-note melody buzzer, and runs on CP/M 2.2
+　It features an IPS-LCD panel, microSD card slot, and an 88-note melody buzzer, and runs on CP/M 2.2
 
 　入出力にArduino Microを採用した2代目Z80シングル・ボード・コンピュータが、
 　ESP32-S3-MINI-1と3.5インチ液晶ディスプレイを搭載して生まれ変わりましたｗ
