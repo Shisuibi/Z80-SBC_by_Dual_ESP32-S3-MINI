@@ -61,6 +61,7 @@
 　＋―　PC-84C0SD 　　　　　　　　　　　…　PC-84C0SD.zip
 　　＋―　Extra 　　　　　　　　　　　　…　番外フォルダ（おまけ）
 　　　｜―　DownMaze88.txt　　　　　　　…　DownMazeのPC-8801MAエミュレータ版
+　　　｜―　natsumi_gen4.h　　　　　　　…　RunCPMのボード設定ヘッダファイル
 　　　｜―　RomDumpList.txt 　　　　　　…　ROMのダンプリスト（IPL・F200H～FFFFH）
 　　＋―　Gerber　　　　　　　　　　　　…　プリント基板の製造データ
 　　　｜―　PC-84C0SD-B_Cu.gbr　　　　　…　導体層（裏面・第4層・+5[V]）
@@ -324,52 +325,6 @@
 　←　入力　5.0[V]出力から3.3[V]入力へ電圧変換しています　4116R-1-103LF　分離抵抗器（10[KΩ]）8素子
 
 
-★技術資料
-
-　【SRAM下位バンク】
-　　512[KB]のSRAMを32[KB]×16ページに分割し、4ビットのページ番号とCPUアドレスビット15の
-　　論理和をSRAMアドレスビット15～18とする事で、Z80が持つメモリ空間64[KB]の下位32[KB]を
-　　16ページ分のバンクメモリから切り替えて使う事が出来ます（上位32[KB]は常にページ15）
-
-　　CP/M 3.0のマルチタスク機能にも対応可能です
-
-　【Dual ESP32-S3】
-　　CPUのCtrlBit・AdrsBus・DataBusの合計32ビットを取り込む際のピン不足を解消する為に、
-　　3代目（PC-84C0SE）ではHC157マルチプレクサとHC597シフトレジスタを搭載していました
-
-　　4代目ではESP32を複数搭載して回路設計の簡略化と実行速度向上を実現しました
-　　起動時にGPIO48をINPUTに切り替えてPD/PUを読み取る事でMaster/Slaveを判別しています
-
-　【M/S相互通信】
-　　2台のESP32はSerial1を介して相互通信しており、Serial0の入出力は全て複製されます
-　　Master/Slaveどちらに繋いだターミナル画面からでも同じ様に操作する事が可能です
-
-　　BLEシリアル（iPhone側アプリ:AirTerminal）と併せて、複製3画面を表示する事が出来ます
-
-　【信号電圧変換】
-　　ESP32の3.3[V]出力→Z84C・論理ICの5.0[V]入力は、直結しますｗ
-　　Z84C・論理ICの5.0[V]出力→ESP32の3.3[V]入力は、抵抗（10[KΩ]）を直列接続します
-
-　【シリアル緩衝】
-　　操作端末とのデータ通信は、USBシリアル×2・BLEシリアルによるマルチUARTで、
-　　受信2Kバイト・送信1Kバイトの緩衝バッファを設けています
-
-　　制御キーのASCIIコードは、緩衝バッファを介さず優先的に処理されます
-
-　【SRAM直接転送】
-　　ブートローダーとCP/M 2.2 BIOSを合わせたROM全体（IPL・F200H～FFFFH）は、
-　　System Resetが実行される際にESP32が直接SRAMへDMA転送します
-
-　　Adrsバスの上位8ビットはSlaveに接続されている為、MasterがSRAMにアクセスする際の
-　　ページアドレス切り替えは、M/S相互通信によって行われます
-
-　【入出力履歴】
-　　液晶表示セグメントの最下段でCPU実行サイクルを表示中に、セグメント中段の右2列
-　　（任意データ01&02のビット）にMREQとIORQの履歴を選択的に表示する事が出来ます
-
-　　オペランド確認・入出力トレース等、低周波数クロックでのデバッグ時に役立ちます
-
-
 ★セグメント表示
 
 　システム情報ビット（SysInfoBit）　　　　　　システム状態ビット（SysModeBit）　　　　　　シリアル送信データ（UartTxData）
@@ -418,6 +373,52 @@
 　　＋――――――――――　CpuCtrRFSH　　　　　＋――――――――――　CpuCtrIORQ　　　　　＋――――――――――　CpuCtrWR
 
 
+★技術資料
+
+　【SRAM下位バンク】
+　　512[KB]のSRAMを32[KB]×16ページに分割し、4ビットのページ番号とCPUアドレスビット15の
+　　論理和をSRAMアドレスビット15～18とする事で、Z80が持つメモリ空間64[KB]の下位32[KB]を
+　　16ページ分のバンクメモリから切り替えて使う事が出来ます（上位32[KB]は常にページ15）
+
+　　CP/M 3.0のマルチタスク機能にも対応可能です
+
+　【Dual ESP32-S3】
+　　CPUのCtrlBit・AdrsBus・DataBusの合計32ビットを取り込む際のピン不足を解消する為に、
+　　3代目（PC-84C0SE）ではHC157マルチプレクサとHC597シフトレジスタを搭載していました
+
+　　4代目ではESP32を複数搭載して回路設計の簡略化と実行速度向上を実現しました
+　　起動時にGPIO48をINPUTに切り替えてPD/PUを読み取る事でMaster/Slaveを判別しています
+
+　【M/S相互通信】
+　　2台のESP32はSerial1を介して相互通信しており、Serial0の入出力は全て複製されます
+　　Master/Slaveどちらに繋いだターミナル画面からでも同じ様に操作する事が可能です
+
+　　BLEシリアル（iPhone側アプリ:AirTerminal）と併せて、複製3画面を表示する事が出来ます
+
+　【信号電圧変換】
+　　ESP32の3.3[V]出力→Z84C・論理ICの5.0[V]入力は、直結しますｗ
+　　Z84C・論理ICの5.0[V]出力→ESP32の3.3[V]入力は、抵抗（10[KΩ]）を直列接続します
+
+　【シリアル緩衝】
+　　操作端末とのデータ通信は、USBシリアル×2・BLEシリアルによるマルチUARTで、
+　　受信2Kバイト・送信1Kバイトの緩衝バッファを設けています
+
+　　制御キーのASCIIコードは、緩衝バッファを介さず優先的に処理されます
+
+　【SRAM直接転送】
+　　ブートローダーとCP/M 2.2 BIOSを合わせたROM全体（IPL・F200H～FFFFH）は、
+　　System Resetが実行される際にESP32が直接SRAMへDMA転送します
+
+　　Adrsバスの上位8ビットはSlaveに接続されている為、MasterがSRAMにアクセスする際の
+　　ページアドレス切り替えは、M/S相互通信によって行われます
+
+　【入出力履歴】
+　　液晶表示セグメントの最下段でCPU実行サイクルを表示中に、セグメント中段の右2列
+　　（任意データ01&02のビット）にMREQとIORQの履歴を選択的に表示する事が出来ます
+
+　　オペランド確認・入出力トレース等、低周波数クロックでのデバッグ時に役立ちます
+
+
 ★RunCPM導入
 
 　2台搭載しているESP32-S3-DevKitM-1の片方（Slave側）と
@@ -427,33 +428,25 @@
 　RunCPMをダウンロードします
 　　https://github.com/MockbaTheBorg/RunCPM
 
-　RunCPMフォルダの中に在るRunCPM.inoから、
+　RunCPMフォルダの中に在るRunCPM.inoから
 　Arduino IDEプロジェクトフォルダを作成します
 
-　RunCPM.inoから#include "～.h"で参照している10個のヘッダファイルを
+　#include "～.h"で参照している以下の14個のヘッダファイルを
 　Arduino IDEプロジェクトフォルダにコピーします
 
-　（ボード設定のヘッダファイルは【hardware\esp32\devkit.h】をコピーします）
+　"abstraction_arduino.h"　"ccp.h"　"console.h"　"cpm.h"
+　"cpu_mhz.h"　"cpu1.h"　"cpu2.h"　"cpu3.h"　"cpu4.h"
+　"debug.h"　"disk.h"　"globals.h"　"host.h"　"ram.h"
 
-　devkit.hの以下の4行を書き換えます
-
-　　#define SPIINIT 12,13,11,9 // sck, miso, mosi, cs
-　　#define SDINIT 9, SD_SCK_MHZ(SDMHZ)
-　　#define LED 48
-　　#define BOARD "ESP32-S3-DevKitM-1"
-
-　RunCPM.inoに以下の関数を追加します
-
-　　static void NeoPixWrite(uint8_t iLedBit) {
-　　　if(iLedBit == LOW) neopixelWrite(LED, 0x00, 0x00, 0x00);
-　　　else neopixelWrite(LED, 0x00, 0x80, 0x00);
-　　}
+　ボード設定のヘッダファイルはPC-84C0SD.zipから
+　【Extraフォルダの"natsumi_gen4.h"】をコピーします（後述）
 
 　RunCPM.inoに複数あるdigitalWrite(LED, ～);を全て書き換えます
 
-　　digitalWrite(LED, LOW );　→　NeoPixWrite(LOW );
-　　digitalWrite(LED, HIGH);　→　NeoPixWrite(HIGH);
-　（abstraction_arduino.hの中にも在るので注意）
+　　digitalWrite(LED, LOW );　→　NeoPixWrite(LED, LOW );
+　　digitalWrite(LED, HIGH);　→　NeoPixWrite(LED, HIGH);
+
+　（"abstraction_arduino.h"の中にも在るので注意）
 
 　DISKフォルダのA0.zipを解凍して生成される\A\0を
 　フォルダ構造を変更せずにルートフォルダにコピーします
@@ -468,6 +461,25 @@
 
 　（RunCPMのMBASICで動作するのは、入出力命令を使用していない
 　DOWNMAZE・MANDEL(Text)・STARTREK・TREKINSTだけです）
+
+　PC-84C0SD.zipを解凍して生成されるExtraフォルダの"natsumi_gen4.h"を
+　Arduino IDEプロジェクトフォルダにコピーします
+
+　RunCPM.inoにある#include "hardware/～"を"natsumi_gen4.h"に書き換えます
+
+
+★超小型RunCPM
+
+　WaveshareのESP32-S3-ZeroとSDカードスロットを使って
+　超小型RunCPMモジュールを作成してみましたｗ
+
+　前項のArduino IDEプロジェクトフォルダがそのまま利用出来ます
+　（ESP32-S3-DevKitMとESP32-S3-ZeroのLED Pinは自動識別されます）
+
+　これをiPhoneのUSB-Cコネクタ（電源）に挿して、更にBLE UARTで
+　iPhoneと無線通信すれば、ドングル1個のZ80 CP/Mモバイル環境爆誕ｗ
+
+　～ To be continued ～
 
 
 ★CP/M 2.2実装
@@ -603,9 +615,10 @@
 　（対象ファイル名が表示された後、プログラムテキストが読み込まれます
 　　SDカードが挿入されていて、SDカードの\B\0フォルダに
 　　以下のファイルが書き込まれている必要があります
-　　"STARTREK.BAS" "TREKINST.BAS" "KNIGHT2K.BAS"
-　　"MANDEL.BAS" "DOWNMAZE.BAS" "NEOPIXEL.BAS"
-　　"ROMDUMP.BAS" "CLKTIMER.BAS" "MELODY.BAS"）
+
+　　"STARTREK.BAS"　"TREKINST.BAS"　"KNIGHT2K.BAS"
+　　"MANDEL.BAS"　"DOWNMAZE.BAS"　"NEOPIXEL.BAS"
+　　"ROMDUMP.BAS"　"CLKTIMER.BAS"　"MELODY.BAS"）
 
 
 ★BASICファイル紹介
