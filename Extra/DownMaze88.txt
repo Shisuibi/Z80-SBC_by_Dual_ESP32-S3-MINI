@@ -1,0 +1,34 @@
+100 REM **** ---- DOWN MAZE ----
+110 REM **** by Kutarahashii for PASOPIA, TOSHIBA Corporation
+120 REM **** Micom BASIC Magazine - Issue 12 - June 1983
+130 DIM M$(9),R(9):HS=0
+200 M$(0)="                          "
+210 M$(1)="#  ###              ### ##"
+220 M$(2)="##        ###    ##     ##"
+230 M$(3)="#  ### ###     #######  ##"
+240 M$(4)="##       # #      ###    #"
+250 M$(5)="#          ####          #"
+260 M$(6)="## #  #             ##  ##"
+270 M$(7)="#  #  #    ###   ## ##   #"
+280 M$(8)="# ##  #      #  ##   ### #"
+290 M$(9)="# ####    ###        #  ##"
+300 CLS:X=13:SC=0:FOR I=0 TO 9:R(I)=0:NEXT I
+400 LOCATE X,13:PRINT "O"
+410 A=INT(RND(1)*9)+1
+420 IF MID$(M$(R(1)),X+1,1)="#" THEN 600
+500 FOR I=0 TO 8:R(I)=R(I+1):NEXT I:R(9)=A
+510 LOCATE 0,23:PRINT M$(A)
+520 SC=SC+1:IF SC>HS THEN HS=SC
+530 LOCATE 26,0:PRINT SC;"m";" /";HS;"m"
+540 GOTO 400
+600 LOCATE 27,2:PRINT "Give..5"
+610 LOCATE 27,1:PRINT "4 <-> 6":K$=INKEY$
+620 REM
+630 IF K$="4" AND MID$(M$(R(0)),X  ,1)<>"#" THEN X=X-1:GOTO 400
+640 IF K$="6" AND MID$(M$(R(0)),X+2,1)<>"#" THEN X=X+1:GOTO 400
+650 IF K$<>"5" THEN 610
+700 LOCATE 27,11:PRINT "***** GAME OVER *****";SC;"m"
+710 LOCATE 30,14:PRINT "REPLAY?  (2/8)":K$=INKEY$
+720 IF K$="2" THEN 300
+730 IF K$<>"8" THEN 710
+740 CLS
