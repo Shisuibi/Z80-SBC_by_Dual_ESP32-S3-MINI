@@ -107,6 +107,8 @@
 　　　｜―　SpiLcd.h　　　　　　　　　　…　定義ファイル（液晶表示）
 　　　｜―　Trans.h 　　　　　　　　　　…　定義ファイル（シリアル通信）
 　　　｜―　Vport.h 　　　　　　　　　　…　定義ファイル（仮想入出力）
+　　｜―　LICENSE 　　　　　　　　　　　…　利用許諾書
+　　｜―　README.htm　　　　　　　　　　…　説明画像
 　　｜―　ReadMe.txt　　　　　　　　　　…　説明書
 
 
