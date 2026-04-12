@@ -428,7 +428,7 @@
 　RunCPMをダウンロードします
 　　https://github.com/MockbaTheBorg/RunCPM
 
-　RunCPMフォルダの中に在るRunCPM.inoから
+　RunCPMフォルダの中にあるRunCPM.inoから
 　Arduino IDEプロジェクトフォルダを作成します
 
 　#include "～.h"で参照している以下の14個のヘッダファイルを
@@ -444,12 +444,27 @@
 　RunCPM.inoにある#include "hardware/～"を"natsumi_gen4.h"に書き換えます
 　RunCPM.inoにある#define SERIALSPD 9600を115200に書き換えます
 
+　RunCPM.inoにあるSerial.beginの直後の待機処理を削除します
+　（PCと有線接続せずにiPhoneと無線接続だけする場合）
+
+　　Serial.begin(SERIALSPD);
+　　/*----
+　　while (!Serial) {　～　}　// Wait until serial is connected
+　　----*/
+
 　RunCPM.inoに複数あるdigitalWrite(LED, ～);を全て書き換えます
+　（"abstraction_arduino.h"の中にもあるので注意）
 
 　　digitalWrite(LED, LOW );　→　NeoPixWrite(LED, LOW );
 　　digitalWrite(LED, HIGH);　→　NeoPixWrite(LED, HIGH);
 
-　（"abstraction_arduino.h"の中にも在るので注意）
+　abstraction_arduino.hの最下部にある以下の5個の関数を削除します
+
+　　/*----
+　　int _kbhit(void) {　～ }　uint8 _getch(void) {　～　}
+　　uint8 _getche(void) {　～　}　void _putch(uint8 ch) {　～　}
+　　void _clrscr(void) {　～　}
+　　----*/
 
 　DISKフォルダのA0.zipを解凍して生成される\A\0を
 　フォルダ構造を変更せずにルートフォルダにコピーします
@@ -479,8 +494,6 @@
 
 　これをiPhoneのUSB-Cコネクタ（電源）に挿して、更にBLE UARTで
 　iPhoneと無線通信すれば、ドングル1個のZ80 CP/Mモバイル環境爆誕ｗ
-
-　～ To be continued ～
 
 
 ★CP/M 2.2実装
