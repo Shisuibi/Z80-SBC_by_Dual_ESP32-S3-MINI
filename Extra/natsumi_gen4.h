@@ -230,7 +230,7 @@ static void TransMove(void) {
 //	SPI_DRIVER_SELECT must be set to 0 in SdFat/SdFatConfig.h (default is 0)
 //------------------------------------------------------------------------------//
 #define		SDMHZ						20
-#define		BOARD						"ESP32-S3-DevKitM / XIAO ESP32C6"
+#define		BOARD						"XIAO ESP32C6 / ESP32-S3-DevKitM"
 
 #define		LED							0
 #define		LEDinv						0
@@ -238,8 +238,8 @@ static void TransMove(void) {
 #define		board_esp32
 #define		board_digital_io
 //------------------------------------------------------------------------------//
-#define		LedDevKitM					48				//	ESP32-S3-DevKitM
 #define		LedXiaoC6					15				//	XIAO ESP32C6
+#define		LedDevKitM					48				//	ESP32-S3-DevKitM
 //------------------------------------------------------------------------------//
 #define		SPIINIT		((iNeoPix == LedDevKitM)?12:19),\
 						((iNeoPix == LedDevKitM)?13:17),\
@@ -267,8 +267,12 @@ static void NeoPixWrite(Uint08 iLedPin, Uint08 iLedBit) {
 		TransInit();
 		pinMode(1, INPUT_PULLDOWN);
 
-		if(digitalRead(1) == HIGH)	iNeoPix = LedDevKitM;	// ESP32-S3-DevKitM
-		else						iNeoPix = LedXiaoC6;	// XIAO ESP32C6
+		if(digitalRead(1) == LOW) {
+			iNeoPix = LedXiaoC6;
+
+			pinMode(WIFI_ENABLE    , OUTPUT);	digitalWrite(WIFI_ENABLE    , LOW);		delay(100);
+			pinMode(WIFI_ANT_CONFIG, OUTPUT);	digitalWrite(WIFI_ANT_CONFIG, LOW);
+		} else iNeoPix = LedDevKitM;
 
 		pinMode(iNeoPix, OUTPUT);
 	}
