@@ -51,8 +51,7 @@
 
 ★ダウンロード
 
-　【PC-84C0SD 20MHz　菜摘（なつみ）Gen4　2026年02月22日】
-　　https://crystalpalace.web.fc2.com/download/PC-84C0SD_20260222.zip
+　【PC-84C0SD 20MHz　菜摘（なつみ）Gen4】
 　　https://github.com/Shisuibi/Z80-SBC_PC-84C0SD_20MHz
 
 
