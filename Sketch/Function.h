@@ -22,6 +22,7 @@ enum {
 #define		StringSizeL					0x0100			//	文字列幅（長）
 //------------------------------------------------------------------------------//
 typedef		const char					Cint08;			//	符号無し文字（08bit）
+typedef		signed short				Sfix88;			//	固定小数点数（88bit）
 //------------------------------------------------------------------------------//
 typedef		unsigned char				Uint08;			//	符号無し整数（08bit）
 typedef		signed char					Sint08;			//	符号有り整数（08bit）

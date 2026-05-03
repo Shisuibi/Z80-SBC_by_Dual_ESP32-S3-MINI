@@ -11,8 +11,22 @@
 
 
 //==============================================================================//
-#define		MatrixStackMax				0x10			//	行列演算スタック上限
+typedef union tCoordinate {
+	struct tInternal {
+		Uint32				iFraction : 23;				//	内部ビット（仮数）
+		Uint32				iExponent : 8;				//	内部ビット（指数）
+		Uint32				iSign : 1;					//	内部ビット（符号）
+	} Internal;
+
+	Sflt32				fFloat;
+} Coordinate;
 //------------------------------------------------------------------------------//
+#define		FixedDecimalSize			8				//	小数ビット長
+
+#define		FloatExponentBias			127				//	指数バイアス
+#define		FloatFractionSize			23				//	仮数ビット長
+//------------------------------------------------------------------------------//
+#define		MatrixStackMax				0x10			//	行列スタック上限
 #define		DegToRad(fAng)	(2.0 * PI * ((fAng) / 360.0))	//	度数弧度変換
 //==============================================================================//
 
@@ -25,13 +39,35 @@
 
 
 //==============================================================================//
-static Sint08 iCurrMatrix;								//	現行行列演算
+static Sint08 iCurrMatrix;								//	現行行列
+static Sfix88 iCoordinate[XYZW];						//	演算座標
 //------------------------------------------------------------------------------//
 static Sflt32 fAmbiLight;								//	環境光源係数
 static Sflt32 fDiffLight;								//	拡散反射係数
 
 static Sflt32 afParaLight[XYZW];						//	平行光源ベクトル
-static Sflt32 afMatrixStack[MatrixStackMax][XYZW][XYZW];	//	行列演算スタック
+static Sflt32 afMatrixStack[MatrixStackMax][XYZW][XYZW];	//	行列スタック
+//==============================================================================//
+
+
+//==============================================================================//
+static Sflt32 FixToFlt(Sfix88 iFix) {
+	Coordinate uCoordinate;
+	Sint08 iDigit, iShift;
+
+	if(uCoordinate.Internal.iSign = iFix < 0) iFix = -iFix;
+	iDigit = 31 - __builtin_clz(iFix);
+
+	if(iFix == 0)	uCoordinate.Internal.iExponent = 0;
+	else			uCoordinate.Internal.iExponent = iDigit - FixedDecimalSize + FloatExponentBias;
+
+	iShift = iDigit - FloatFractionSize;
+
+	if(iShift < 0)	uCoordinate.Internal.iFraction = iFix << -iShift;
+	else			uCoordinate.Internal.iFraction = iFix >>  iShift;
+
+	return(uCoordinate.fFloat);
+}
 //==============================================================================//
 
 
@@ -76,16 +112,14 @@ static void MatrixFlushScreen(void) {
 }
 //------------------------------------------------------------------------------//
 static void MatrixAmbiLight(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-	fDiffLight = 1.0 - (fAmbiLight = 0.5);
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	fDiffLight = 1.0 - fAmbiLight;
 }
 //------------------------------------------------------------------------------//
 static void MatrixParaLight(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-	afParaLight[X] = 8.0;	afParaLight[Y] = 8.0;	afParaLight[Z] = -8.0;	afParaLight[W] = 1.0;
+	Sint08 i;
+
+	for(i = 0;i < XYZW;i++) afParaLight[i] = FixToFlt(iCoordinate[i]);
 	MatrixVecUnit(afParaLight);
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
 //==============================================================================//
 
