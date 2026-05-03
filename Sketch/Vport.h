@@ -521,12 +521,12 @@ static void VportZ3dFlushScrn(void) {
 //------------------------------------------------------------------------------//
 static void VportZ3dAmbiLight(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(255.0 * fAmbiLight);
-	else			{	fAmbiLight = (Sflt32)iPioDataBus / 255.0;	MatrixAmbiLight();	}
+	else			MatrixAmbiLight((Sflt32)iPioDataBus / 255.0);
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dParaLight(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(255.0 * fDiffLight);
-	else			MatrixParaLight();
+	else			MatrixParaLight(afCoordinate);
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dMatPush(void) {
@@ -623,43 +623,43 @@ static void VportZ3dMdlShade(void) {
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorXL(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[X] & 0x00FF);
-	else			iCoordinate[X] = (iCoordinate[X] & 0xFF00) | ((Sfix88)iPioDataBus);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[X] & 0x00FF);
+	else			afCoordinate[X] = FixToFlt(aiCoordinate[X] = (aiCoordinate[X] & 0xFF00) | ((Sfix88)iPioDataBus));
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorXH(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[X] >> 8);
-	else			iCoordinate[X] = (iCoordinate[X] & 0x00FF) | (((Sfix88)iPioDataBus) << 8);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[X] >> 8);
+	else			afCoordinate[X] = FixToFlt(aiCoordinate[X] = (aiCoordinate[X] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorYL(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[Y] & 0x00FF);
-	else			iCoordinate[Y] = (iCoordinate[Y] & 0xFF00) | ((Sfix88)iPioDataBus);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[Y] & 0x00FF);
+	else			afCoordinate[Y] = FixToFlt(aiCoordinate[Y] = (aiCoordinate[Y] & 0xFF00) | ((Sfix88)iPioDataBus));
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorYH(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[Y] >> 8);
-	else			iCoordinate[Y] = (iCoordinate[Y] & 0x00FF) | (((Sfix88)iPioDataBus) << 8);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[Y] >> 8);
+	else			afCoordinate[Y] = FixToFlt(aiCoordinate[Y] = (aiCoordinate[Y] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorZL(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[Z] & 0x00FF);
-	else			iCoordinate[Z] = (iCoordinate[Z] & 0xFF00) | ((Sfix88)iPioDataBus);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[Z] & 0x00FF);
+	else			afCoordinate[Z] = FixToFlt(aiCoordinate[Z] = (aiCoordinate[Z] & 0xFF00) | ((Sfix88)iPioDataBus));
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorZH(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[Z] >> 8);
-	else			iCoordinate[Z] = (iCoordinate[Z] & 0x00FF) | (((Sfix88)iPioDataBus) << 8);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[Z] >> 8);
+	else			afCoordinate[Z] = FixToFlt(aiCoordinate[Z] = (aiCoordinate[Z] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorWL(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[W] & 0x00FF);
-	else			iCoordinate[W] = (iCoordinate[W] & 0xFF00) | ((Sfix88)iPioDataBus);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[W] & 0x00FF);
+	else			afCoordinate[W] = FixToFlt(aiCoordinate[W] = (aiCoordinate[W] & 0xFF00) | ((Sfix88)iPioDataBus));
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dVectorWH(void) {
-	if(PioInput)	iPioDataBus = (Uint08)(iCoordinate[W] >> 8);
-	else			iCoordinate[W] = (iCoordinate[W] & 0x00FF) | (((Sfix88)iPioDataBus) << 8);
+	if(PioInput)	iPioDataBus = (Uint08)(aiCoordinate[W] >> 8);
+	else			afCoordinate[W] = FixToFlt(aiCoordinate[W] = (aiCoordinate[W] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
 }
 //==============================================================================//
 

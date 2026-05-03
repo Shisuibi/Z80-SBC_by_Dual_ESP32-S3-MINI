@@ -40,7 +40,9 @@ typedef union tCoordinate {
 
 //==============================================================================//
 static Sint08 iCurrMatrix;								//	現行行列
-static Sfix88 iCoordinate[XYZW];						//	演算座標
+
+static Sfix88 aiCoordinate[XYZW];						//	演算座標（固定小数点数）
+static Sflt32 afCoordinate[XYZW];						//	演算座標（浮動小数点数）
 //------------------------------------------------------------------------------//
 static Sflt32 fAmbiLight;								//	環境光源係数
 static Sflt32 fDiffLight;								//	拡散反射係数
@@ -111,14 +113,14 @@ static void MatrixFlushScreen(void) {
 	SpiLCD.endWrite();
 }
 //------------------------------------------------------------------------------//
-static void MatrixAmbiLight(void) {
-	fDiffLight = 1.0 - fAmbiLight;
+static void MatrixAmbiLight(Sflt32 fAmbi) {
+	fDiffLight = 1.0 - (fAmbiLight = fAmbi);
 }
 //------------------------------------------------------------------------------//
-static void MatrixParaLight(void) {
+static void MatrixParaLight(Sflt32* pVec) {
 	Sint08 i;
 
-	for(i = 0;i < XYZW;i++) afParaLight[i] = FixToFlt(iCoordinate[i]);
+	for(i = 0;i < XYZW;i++) afParaLight[i] = pVec[i];
 	MatrixVecUnit(afParaLight);
 }
 //==============================================================================//
@@ -479,10 +481,11 @@ static void MatrixInit(void) {
 	if(Esp32Master) return;
 	iCurrMatrix = 0;
 
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-	MatrixAmbiLight();
-	MatrixParaLight();
+	afCalcVertex[0][X] = 8.0;	afCalcVertex[0][Y] = 8.0;
+	afCalcVertex[0][Z] = -8.0;	afCalcVertex[0][W] = 1.0;
+
+	MatrixAmbiLight(0.5);
+	MatrixParaLight(afCalcVertex[0]);
 
 	MatrixNormal();
 
