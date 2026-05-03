@@ -1,7 +1,7 @@
 
 //==============================================================================//
 //	Z80 Single Board Computer "PC-84C0SD 20MHz" IPL & MS-BASIC Boot ROM Image	//
-//				Implemented by Shisuibi Å`Grand Master SorcerianÅ`				//
+//				Implemented by Shisuibi --Grand Master Sorcerian--				//
 //==============================================================================//
 
 

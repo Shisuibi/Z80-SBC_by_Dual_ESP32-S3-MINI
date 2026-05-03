@@ -1,7 +1,7 @@
 
 //==============================================================================//
 //	Z80 Single Board Computer "PC-84C0SD 20MHz" I/O Sketch for ESP32-S3-MINI-1	//
-//				Implemented by Shisuibi Å`Grand Master SorcerianÅ`				//
+//				Implemented by Shisuibi --Grand Master Sorcerian--				//
 //==============================================================================//
 
 
