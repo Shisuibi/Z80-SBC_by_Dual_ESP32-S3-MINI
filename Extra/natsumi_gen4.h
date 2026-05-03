@@ -1,7 +1,7 @@
 
 //==============================================================================//
 //	Z80 Single Board Computer "PC-84C0SD 20MHz" I/O Sketch for ESP32-S3-MINI-1	//
-//				Implemented by Shisuibi Å`Grand Master SorcerianÅ`				//
+//				Implemented by Shisuibi --Grand Master Sorcerian--				//
 //==============================================================================//
 
 
@@ -241,12 +241,12 @@ static void TransMove(void) {
 #define		LedXiaoC6					15				//	XIAO ESP32C6
 #define		LedDevKitM					48				//	ESP32-S3-DevKitM
 //------------------------------------------------------------------------------//
-#define		SPIINIT		((iNeoPix == LedDevKitM)?12:19),\
-						((iNeoPix == LedDevKitM)?13:17),\
-						((iNeoPix == LedDevKitM)?11:20),\
-						((iNeoPix == LedDevKitM)? 9:18)		//	sck, miso, mosi, cs
+#define		SPIINIT		((iNeoPix == LedXiaoC6)?19:12),\
+						((iNeoPix == LedXiaoC6)?17:13),\
+						((iNeoPix == LedXiaoC6)?20:11),\
+						((iNeoPix == LedXiaoC6)?18: 9)	//	sck, miso, mosi, cs
 //------------------------------------------------------------------------------//
-#define		SDINIT		((iNeoPix == LedDevKitM)? 9:18), SD_SCK_MHZ(SDMHZ)
+#define		SDINIT		((iNeoPix == LedXiaoC6)?18: 9), SD_SCK_MHZ(SDMHZ)
 //==============================================================================//
 
 
@@ -264,7 +264,6 @@ static Uint08 esp32bdos(Uint16 iDmaAddr) {
 //------------------------------------------------------------------------------//
 static void NeoPixWrite(Uint08 iLedPin, Uint08 iLedBit) {
 	if(iNeoPix == LED) {
-		TransInit();
 		pinMode(1, INPUT_PULLDOWN);
 
 		if(digitalRead(1) == LOW) {
@@ -275,6 +274,7 @@ static void NeoPixWrite(Uint08 iLedPin, Uint08 iLedBit) {
 		} else iNeoPix = LedDevKitM;
 
 		pinMode(iNeoPix, OUTPUT);
+		TransInit();
 	}
 
 	if(iNeoPix == LedDevKitM) {
