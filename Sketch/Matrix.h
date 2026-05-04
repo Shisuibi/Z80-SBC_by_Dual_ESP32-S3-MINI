@@ -27,7 +27,7 @@ typedef union tCoordinate {
 #define		FloatFractionSize			23				//	仮数ビット長
 //------------------------------------------------------------------------------//
 #define		MatrixStackMax				0x10			//	行列スタック上限
-#define		DegToRad(fAng)	(2.0 * PI * ((fAng) / 360.0))	//	度数弧度変換
+#define		DegToRad(fAng)		(PI * (fAng) / 180.0)	//	度数弧度変換
 //==============================================================================//
 
 
@@ -412,31 +412,6 @@ static void VertexPrint(void) {
 
 	Serial.println();
 }
-//------------------------------------------------------------------------------//
-static void MatrixModel(void) {
-	static Uint08 iDeg = 0;
-	Sint08 iLevel = iCurrMatrix;
-
-	MatrixCopy();
-	afCalcVertex[0][X] = 0.0;	afCalcVertex[0][Y] = 0.0;
-	afCalcVertex[0][Z] = 8.0;	afCalcVertex[0][W] = 1.0;	MatrixTrans(afCalcVertex[0]);
-	MatrixPush();
-
-	MatrixUnit();
-	MatrixRotateX(PI * ((Sflt32)iDeg   * 1.0 / 128.0));
-	MatrixRotateY(PI * ((Sflt32)iDeg   * 2.0 / 128.0));
-	MatrixRotateZ(PI * ((Sflt32)iDeg++ * 3.0 / 128.0));
-	MatrixPush();
-
-	MatrixMultiply(iLevel);
-	MatrixEntry();
-	MatrixPop();
-
-	MatrixShade();
-	MatrixPop();
-
-	MatrixDraw();
-};
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //------------------------------------------------------------------------------//
@@ -478,39 +453,13 @@ static void MatrixFrameRate(void) {
 
 //==============================================================================//
 static void MatrixInit(void) {
-	if(Esp32Master) return;
 	iCurrMatrix = 0;
-
-	afCalcVertex[0][X] = 8.0;	afCalcVertex[0][Y] = 8.0;
-	afCalcVertex[0][Z] = -8.0;	afCalcVertex[0][W] = 1.0;
-
-	MatrixAmbiLight(0.5);
-	MatrixParaLight(afCalcVertex[0]);
-
 	MatrixNormal();
-
-	MatrixDevice();
-	MatrixPush();
-
-	MatrixPers(DegToRad(45.0), 1.0, 100.0);
-	MatrixPush();
-
-	MatrixMultiply(0);
-	MatrixPush();
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
 //------------------------------------------------------------------------------//
 static void MatrixMove(void) {
-	if((Esp32Master)||(LcdModeSegment)) return;
-
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-/*@@@@
-	MatrixModel();
-	MatrixFlushScreen();
-@@@@*/
-
 /*@@@@
 	MatrixFrameRate();
 @@@@*/

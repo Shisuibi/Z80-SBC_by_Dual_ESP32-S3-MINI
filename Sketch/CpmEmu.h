@@ -21,6 +21,7 @@ enum {
 	BasicFileRomDump    ,								//	ROMダンプリスト
 	BasicFileClockTimer ,								//	システム時刻
 	BasicFileMelody     ,								//	旋律♪自動演奏
+	BasicFileZ3dApi     ,								//	幾何学演算ライブラリ
 
 	BasicFileMax,										//	BASICファイル上限
 };
@@ -147,6 +148,7 @@ static Cint08* apBasicFileName[BasicFileMax] = {		//	BASICファイル名称
 	"/B/0/ROMDUMP.BAS" ,								//	ROMダンプリスト
 	"/B/0/CLKTIMER.BAS",								//	システム時刻
 	"/B/0/MELODY.BAS"  ,								//	旋律♪自動演奏
+	"/B/0/Z3DAPI.BAS"  ,								//	幾何学演算ライブラリ
 };
 //------------------------------------------------------------------------------//
 static File32 SdcBasicFile;								//	BASICファイル識別子
