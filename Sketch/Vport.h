@@ -557,18 +557,18 @@ static void VportZ3dMatCopy(void) {
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dMatRotX(void) {
-	if(PioInput)	iPioDataBus = iCurrMatrix;
-	else			MatrixRotateX(PI * (Sflt32)(Sint08)iPioDataBus / 127.0);
+	if(PioInput)	iPioDataBus = iCurrMatrix;			//	Åyíçà”ÅzÅ}ã´äEèåè
+	else			MatrixRotateX(PI * (Sflt32)(Sint08)iPioDataBus / 128.0);
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dMatRotY(void) {
-	if(PioInput)	iPioDataBus = iCurrMatrix;
-	else			MatrixRotateY(PI * (Sflt32)(Sint08)iPioDataBus / 127.0);
+	if(PioInput)	iPioDataBus = iCurrMatrix;			//	Åyíçà”ÅzÅ}ã´äEèåè
+	else			MatrixRotateY(PI * (Sflt32)(Sint08)iPioDataBus / 128.0);
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dMatRotZ(void) {
-	if(PioInput)	iPioDataBus = iCurrMatrix;
-	else			MatrixRotateZ(PI * (Sflt32)(Sint08)iPioDataBus / 127.0);
+	if(PioInput)	iPioDataBus = iCurrMatrix;			//	Åyíçà”ÅzÅ}ã´äEèåè
+	else			MatrixRotateZ(PI * (Sflt32)(Sint08)iPioDataBus / 128.0);
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dMatMulti(void) {
@@ -592,8 +592,8 @@ static void VportZ3dMatDevice(void) {
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dMatPers(void) {
-	if(PioInput)	iPioDataBus = iCurrMatrix;
-	else			MatrixPers(PI * (Sflt32)iPioDataBus / 255.0, afCoordinate[X], afCoordinate[Y]);
+	if(PioInput)	iPioDataBus = iCurrMatrix;			//	Åyíçà”ÅzäpìxÇÃèké⁄ÇRotateXYZÇ…çáÇÌÇπÇÈ
+	else			MatrixPers(PI * (Sflt32)iPioDataBus / 256.0, afCoordinate[X], afCoordinate[Y]);
 }
 //==============================================================================//
 
