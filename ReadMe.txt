@@ -27,16 +27,23 @@
 
 　入出力にArduino Microを採用した2代目Z80シングル・ボード・コンピュータが、
 　ESP32-S3-MINI-1と3.5インチ液晶ディスプレイを搭載して生まれ変わりましたｗ
+
 　2代目同様、KiCadで設計＆PCBWayさん製作の本格的なプリント基板が美しいです
 　4代目ではESP32を複数搭載して回路設計の簡略化と実行速度向上を目指しました
 
 　SRAMのSとDualのDでPC-84C0SDと命名しました
 　愛称は菜摘（なつみ）Gen4ちゃんです（紫と金の基板が菜の花に見えたから）
 
+
+★歴代Z80-SBC
+
 　1代目　…　PC-84C0SF 20MHz（FT245RL USBパラレル変換）ブレッドボード
 　2代目　…　PC-84C0SA 20MHz（Arduino Micro）プリント基板
 　3代目　…　PC-84C0SE 20MHz（ESP32-S3-MINI-1）プリント基板
 　4代目　…　PC-84C0SD 20MHz（Dual ESP32-S3-MINI-1）プリント基板
+
+
+★PC-84C0SD菜摘Gen4
 
 　2代目同様、USBシリアル×2・BLEシリアルによる
 　マルチUARTで、PC有線接続×2・iPhone無線接続の
