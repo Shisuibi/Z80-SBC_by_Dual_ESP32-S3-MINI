@@ -514,16 +514,15 @@ static void VportLcdRadY3H(void) {
 
 
 //==============================================================================//
+static void VportZ3dInit(void) {
+	if(PioInput) {	iPioDataBus = 0x00;		MultiCpuOutput();	}
+	MatrixInit();
+}
+//------------------------------------------------------------------------------//
 static void VportZ3dFlushScrn(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-	if(PioInput) iPioDataBus = (Uint08)iCurrLcdMode;
-	else {
-		if((Esp32Master)||(LcdModeSegment)) return;
-		MatrixFlushScreen();
-	}
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	if(PioInput) {	iPioDataBus = 0x00;		MultiCpuOutput();	}
+	if((Esp32Master)||(LcdModeSegment)) return;
+	MatrixFlushScreen();
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dAmbiLight(void) {
@@ -533,7 +532,7 @@ static void VportZ3dAmbiLight(void) {
 //------------------------------------------------------------------------------//
 static void VportZ3dParaLight(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(255.0 * fDiffLight);
-	else			MatrixParaLight(afCoordinate);
+	else			MatrixParaLight((Sflt32)iPioDataBus / 255.0, afCoordinate);
 }
 //------------------------------------------------------------------------------//
 static void VportZ3dMatPush(void) {
@@ -600,12 +599,10 @@ static void VportZ3dMatPers(void) {
 
 //==============================================================================//
 static void VportZ3dMdlClear(void) {
+	if(PioInput) {	iPioDataBus = 0x00;		MultiCpuOutput();	}
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-if(Esp32Slave) {
-	if(PioInput)	iPioDataBus = 0x00;
-	else			MatrixDraw();
-}
+if(Esp32Slave) MatrixDraw();
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
@@ -628,10 +625,7 @@ static void VportZ3dMdlPoly(void) {
 static void VportZ3dMdlEntry(void) {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-if(Esp32Slave) {
-	if(PioInput)	iPioDataBus = 0x00;
-	else			MatrixEntry();
-}
+if(Esp32Slave) MatrixEntry();
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
@@ -639,10 +633,7 @@ if(Esp32Slave) {
 static void VportZ3dMdlShade(void) {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-if(Esp32Slave) {
-	if(PioInput)	iPioDataBus = 0x00;
-	else			MatrixShade();
-}
+if(Esp32Slave) MatrixShade();
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 }
@@ -820,7 +811,7 @@ static void (* apVportInOut[0x0100])(void) = {
 	VportLcdDisX2L   ,	VportLcdDisX2H   ,	VportLcdDisY2L   ,	VportLcdDisY2H   ,
 	VportLcdRadX3L   ,	VportLcdRadX3H   ,	VportLcdRadY3L   ,	VportLcdRadY3H   ,
 
-	VportZ3dFlushScrn,	VportInOutNop    ,	VportZ3dAmbiLight,	VportZ3dParaLight,
+	VportZ3dInit     ,	VportZ3dFlushScrn,	VportZ3dAmbiLight,	VportZ3dParaLight,
 	VportZ3dMatPush  ,	VportZ3dMatPop   ,	VportZ3dMatUnit  ,	VportZ3dMatCopy  ,
 	VportZ3dMatRotX  ,	VportZ3dMatRotY  ,	VportZ3dMatRotZ  ,	VportZ3dMatMulti ,
 	VportZ3dMatTrans ,	VportZ3dMatScale ,	VportZ3dMatDevice,	VportZ3dMatPers  ,

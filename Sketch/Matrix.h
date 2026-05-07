@@ -114,11 +114,12 @@ static void MatrixFlushScreen(void) {
 }
 //------------------------------------------------------------------------------//
 static void MatrixAmbiLight(Sflt32 fAmbi) {
-	fDiffLight = 1.0 - (fAmbiLight = fAmbi);
+	if(((fAmbiLight = fAmbi) + fDiffLight) > 1.0) fDiffLight = 1.0 - fAmbiLight;
 }
 //------------------------------------------------------------------------------//
-static void MatrixParaLight(Sflt32* pVec) {
+static void MatrixParaLight(Sflt32 fDiff, Sflt32* pVec) {
 	Sint08 i;
+	if((fAmbiLight + (fDiffLight = fDiff)) > 1.0) fAmbiLight = 1.0 - fDiffLight;
 
 	for(i = 0;i < XYZW;i++) afParaLight[i] = pVec[i];
 	MatrixVecUnit(afParaLight);
