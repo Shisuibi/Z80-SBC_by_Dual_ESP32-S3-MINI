@@ -14,8 +14,8 @@
 #define		LcdScrnPixelX				480				//	液晶表示画面ピクセル（横）
 #define		LcdScrnPixelY				320				//	液晶表示画面ピクセル（縦）
 
-#define		LcdCnvsPixelX				448				//	液晶表示画布ピクセル（横）
-#define		LcdCnvsPixelY				252				//	液晶表示画布ピクセル（縦）
+#define		LcdCnvsPixelX				480				//	液晶表示画布ピクセル（横）
+#define		LcdCnvsPixelY				270				//	液晶表示画布ピクセル（縦）
 //------------------------------------------------------------------------------//
 #define		LcdStdRotation				1				//	液晶表示回転方向（基準値）
 #define		LcdSegInterval				15625			//	液晶表示更新間隔（64[Hz]）

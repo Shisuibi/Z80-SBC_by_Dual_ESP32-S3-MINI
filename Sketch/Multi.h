@@ -224,8 +224,14 @@ static void MultiWait(Uint08 iCode) {
 //==============================================================================//
 static void MultiInit(void) {
 	Serial1.end();
-	Serial1.setRxBufferSize(SerialBufSizeDx);
+#ifdef		BuildMaster
+	Serial1.setRxBufferSize(SerialBufSizeRx);
 	Serial1.setTxBufferSize(SerialBufSizeDx);
+#endif
+#ifdef		BuildSlave
+	Serial1.setRxBufferSize(SerialBufSizeDx);
+	Serial1.setTxBufferSize(SerialBufSizeTx);
+#endif
 	Serial1.begin(SerialBaudRateDx, SERIAL_8N1, GpioUa1Rxd, GpioUa1Txd);
 
 	NeoPixInput();	iMasterSlave = NeoPixRead();	iSynchWait = False;

@@ -26,9 +26,9 @@
 #define		SerialBaudRateDx			460800			//	通信端末ボーレート（電文）
 
 #define		SerialSegSizeTx				0x0080			//	通信端末切片文字数（送信）
-#define		SerialBufSizeDx				0x0400			//	シリアル緩衝サイズ（電文）
+#define		SerialBufSizeDx				0x0800			//	シリアル緩衝サイズ（電文）
 //------------------------------------------------------------------------------//
-#define		SerialBufSizeRx				0x0800			//	シリアル緩衝サイズ（受信）
+#define		SerialBufSizeRx				0x0400			//	シリアル緩衝サイズ（受信）
 #define		SerialBufSizeTx				0x0400			//	シリアル緩衝サイズ（送信）
 //------------------------------------------------------------------------------//
 #define		SerialBufMaskRx(iIndex)	\
@@ -418,7 +418,7 @@ static void TransRead(void) {
 //==============================================================================//
 static void TransInit(void) {
 	Serial.end();
-	Serial.setRxBufferSize(SerialBufSizeTx);
+	Serial.setRxBufferSize(SerialBufSizeRx);
 	Serial.setTxBufferSize(SerialBufSizeTx);
 	Serial.begin(SerialBaudRateTx, SERIAL_8N1, GpioUa0Rxd, GpioUa0Txd);
 
@@ -426,7 +426,9 @@ static void TransInit(void) {
 	TransClear();	iBleAdvtReq = True;
 
 	iSerialMicros = micros();
+#ifdef		BuildMaster
 	if(Esp32Master) TransBleStart();
+#endif
 }
 //------------------------------------------------------------------------------//
 static void TransMove(void) {
