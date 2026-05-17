@@ -19,17 +19,17 @@ enum {
 	ResetModeMax,										//	再起動モード上限
 };
 //------------------------------------------------------------------------------//
-#define		CpuCtrlHALT					0x80			//	CPU制御ビット（HALT）
-#define		CpuCtrlBSAK					0x40			//	CPU制御ビット（BUSACK）
-
-#define		CpuCtrlRFSH					0x20			//	CPU制御ビット（RFSH）
-#define		CpuCtrlM1					0x10			//	CPU制御ビット（M1）
-
-#define		CpuCtrlIORQ					0x08			//	CPU制御ビット（IORQ）
-#define		CpuCtrlMREQ					0x04			//	CPU制御ビット（MREQ）
-
-#define		CpuCtrlWR					0x02			//	CPU制御ビット（WR）
 #define		CpuCtrlRD					0x01			//	CPU制御ビット（RD）
+#define		CpuCtrlWR					0x02			//	CPU制御ビット（WR）
+
+#define		CpuCtrlMREQ					0x04			//	CPU制御ビット（MREQ）
+#define		CpuCtrlIORQ					0x08			//	CPU制御ビット（IORQ）
+
+#define		CpuCtrlM1					0x10			//	CPU制御ビット（M1）
+#define		CpuCtrlRFSH					0x20			//	CPU制御ビット（RFSH）
+
+#define		CpuCtrlBSAK					0x40			//	CPU制御ビット（BUSACK）
+#define		CpuCtrlHALT					0x80			//	CPU制御ビット（HALT）
 //==============================================================================//
 
 

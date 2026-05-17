@@ -481,8 +481,8 @@ static void SpiLcdInit(Sint08 iReset) {
 	if(Esp32Master) return;
 
 	if(iReset == False) {
-		SpiLCD.init();	SpiLCD.setSwapBytes(True);
-		Canvas.createSprite(LcdCnvsPixelX, LcdCnvsPixelY);
+		SpiLCD.init();
+		SpiLCD.setSwapBytes(True);
 	}
 
 	SpiLCD.setBrightness(iLcdBrightness);

@@ -12,51 +12,55 @@
 
 //==============================================================================//
 enum {
-	Z3dModeStandBy  ,									//	Z3Dモード（待機）
+	Z3dProcStandBy  ,									//	Z3Dモード（待機）
 
-	Z3dModeInit     ,									//	Z3Dモード（初期化）
-	Z3dModeFlushScrn,									//	Z3Dモード（画面更新）
-	Z3dModeAmbiLight,									//	Z3Dモード（環境光源係数）
-	Z3dModeDiffLight,									//	Z3Dモード（拡散反射係数）
-	Z3dModeMatPush  ,									//	Z3Dモード（行列積重）
-	Z3dModeMatPop   ,									//	Z3Dモード（行列取除）
-	Z3dModeMatUnit  ,									//	Z3Dモード（単位行列）
-	Z3dModeMatCopy  ,									//	Z3Dモード（行列複写）
+	Z3dProcInit     ,									//	Z3Dモード（初期化）
+	Z3dProcFlushScrn,									//	Z3Dモード（画面更新）
+	Z3dProcAmbiLight,									//	Z3Dモード（環境光源係数）
+	Z3dProcDiffLight,									//	Z3Dモード（拡散反射係数）
+	Z3dProcMatPush  ,									//	Z3Dモード（行列積重）
+	Z3dProcMatPop   ,									//	Z3Dモード（行列取除）
+	Z3dProcMatUnit  ,									//	Z3Dモード（単位行列）
+	Z3dProcMatCopy  ,									//	Z3Dモード（行列複写）
 
-	Z3dModeMatRotX  ,									//	Z3Dモード（回転X軸）
-	Z3dModeMatRotY  ,									//	Z3Dモード（回転Y軸）
-	Z3dModeMatRotZ  ,									//	Z3Dモード（回転Z軸）
-	Z3dModeMatMulti ,									//	Z3Dモード（行列乗算）
-	Z3dModeMatTrans ,									//	Z3Dモード（平行移動）
-	Z3dModeMatScale ,									//	Z3Dモード（拡大縮小）
-	Z3dModeMatDevice,									//	Z3Dモード（表示機器行列）
-	Z3dModeMatPers  ,									//	Z3Dモード（透視変換行列）
+	Z3dProcMatRotX  ,									//	Z3Dモード（回転X軸）
+	Z3dProcMatRotY  ,									//	Z3Dモード（回転Y軸）
+	Z3dProcMatRotZ  ,									//	Z3Dモード（回転Z軸）
+	Z3dProcMatMulti ,									//	Z3Dモード（行列乗算）
+	Z3dProcMatTrans ,									//	Z3Dモード（平行移動）
+	Z3dProcMatScale ,									//	Z3Dモード（拡大縮小）
+	Z3dProcMatDevice,									//	Z3Dモード（表示機器行列）
+	Z3dProcMatPers  ,									//	Z3Dモード（透視変換行列）
 
-	Z3dModeMdlClear ,									//	Z3Dモード（模型消去）
-	Z3dModeMdlBuild ,									//	Z3Dモード（模型追加・変更）
-	Z3dModeMdlVertex,									//	Z3Dモード（頂点追加・変更）
-	Z3dModeMdlPoly  ,									//	Z3Dモード（多角追加・変更）
-	Z3dModeMdlEntry ,									//	Z3Dモード（模型登録）
-	Z3dModeMdlShade ,									//	Z3Dモード（模型陰影）
+	Z3dProcMdlClear ,									//	Z3Dモード（模型消去）
+	Z3dProcMdlBuild ,									//	Z3Dモード（模型追加・変更）
+	Z3dProcMdlVertex,									//	Z3Dモード（頂点追加・変更）
+	Z3dProcMdlPoly  ,									//	Z3Dモード（多角追加・変更）
+	Z3dProcMdlEntry ,									//	Z3Dモード（模型登録）
+	Z3dProcMdlShade ,									//	Z3Dモード（模型陰影）
 
-	Z3dModeVectorXL ,									//	Z3Dモード（座標X下位）
-	Z3dModeVectorXH ,									//	Z3Dモード（座標X上位）
-	Z3dModeVectorYL ,									//	Z3Dモード（座標Y下位）
-	Z3dModeVectorYH ,									//	Z3Dモード（座標Y上位）
-	Z3dModeVectorZL ,									//	Z3Dモード（座標Z下位）
-	Z3dModeVectorZH ,									//	Z3Dモード（座標Z上位）
-	Z3dModeVectorWL ,									//	Z3Dモード（座標W下位）
-	Z3dModeVectorWH ,									//	Z3Dモード（座標W上位）
+	Z3dProcVectorXL ,									//	Z3Dモード（座標X下位）
+	Z3dProcVectorXH ,									//	Z3Dモード（座標X上位）
+	Z3dProcVectorYL ,									//	Z3Dモード（座標Y下位）
+	Z3dProcVectorYH ,									//	Z3Dモード（座標Y上位）
+	Z3dProcVectorZL ,									//	Z3Dモード（座標Z下位）
+	Z3dProcVectorZH ,									//	Z3Dモード（座標Z上位）
+	Z3dProcVectorWL ,									//	Z3Dモード（座標W下位）
+	Z3dProcVectorWH ,									//	Z3Dモード（座標W上位）
 
-	Z3dModeMax,											//	Z3Dモード上限
+	Z3dProcMax,											//	Z3Dモード上限
 };
 //------------------------------------------------------------------------------//
 #define		MatrixStackMax				0x10			//	行列スタック上限
+#define		ModelStorageMax				0x8000			//	模型格納領域上限
 //------------------------------------------------------------------------------//
 #define		FixedDecimalSize			8				//	小数ビット長
 
 #define		FloatExponentBias			127				//	指数バイアス
 #define		FloatFractionSize			23				//	仮数ビット長
+//------------------------------------------------------------------------------//
+#define		MdlAttrBackJudge			0x01			//	模型描画属性（裏面判定）
+#define		MdlAttrDepthSort			0x80			//	模型描画属性（奥行整列）
 //------------------------------------------------------------------------------//
 typedef union tCoordinate {
 	struct tInternal {
@@ -67,6 +71,33 @@ typedef union tCoordinate {
 
 	Sflt32				fFloat;							//	浮動小数点数
 } Coordinate;											//	演算座標
+//------------------------------------------------------------------------------//
+typedef struct tPolyInfo {
+	Uint08				aiVertex[3];					//	多角頂点
+	Uint08				iReservedV;						//	予備
+
+	Uint08				aiMaterial[3];					//	多角材質
+	Uint08				iReservedM;						//	予備
+} PolyInfo;
+//------------------------------------------------------------------------------//
+typedef struct tModelInfo {
+	union tModelHead {
+		struct tInternal {
+			Uint08				iVertexCount;			//	頂点数
+			Uint08				iPolygonCount;			//	多角数
+
+			Uint08				iAttribute;				//	描画属性
+			Uint08				iAllocate;				//	領域割当
+		} Internal;										//	内部形式
+
+		Uint32				iExternal;					//	外部形式
+	} ModelHead;										//	先頭データ
+
+	Sflt32				(* pVertex)[XYZW];				//	格納領域（模型頂点）
+	Sflt32				(* pNormal)[XYZW];				//	格納領域（模型法線）
+
+	PolyInfo*			pPolyInfo;						//	格納領域（模型多角）
+} ModelInfo;											//	模型情報
 //------------------------------------------------------------------------------//
 typedef struct tTriInfo {
 	Sint16				aiPos[3][XY];					//	表示座標
@@ -85,8 +116,14 @@ static void MatrixFlushScreen(void);
 
 
 //==============================================================================//
-static Sint08 iCurrZ3dMode;								//	現行Z3Dモード
-static Sint08 iCurrMatrix;								//	現行行列
+static Sint08 iCurrZ3dProc;								//	現行Z3Dモード
+static Sint08 iCurrZ3dMatrix;							//	現行行列
+
+static Uint08 iCurrZ3dModel;							//	現行模型
+static Uint16 iCurrZ3dStorage;							//	現行格納領域
+//------------------------------------------------------------------------------//
+static Uint16 iModelEntry;								//	模型登録
+static Uint16 iModelShade;								//	模型陰影
 
 static Sfix88 aiCoordinate[XYZW];						//	演算座標（固定小数点数）
 static Sflt32 afCoordinate[XYZW];						//	演算座標（浮動小数点数）
@@ -95,7 +132,28 @@ static Sflt32 fAmbiLight;								//	環境光源係数
 static Sflt32 fDiffLight;								//	拡散反射係数
 
 static Sflt32 afParaLight[XYZW];						//	平行光源ベクトル
-static Sflt32 afMatrixStack[MatrixStackMax][XYZW][XYZW];	//	行列スタック
+//------------------------------------------------------------------------------//
+#ifdef		BuildMaster
+static Sflt32 afMatrixStack[MatrixStackMax][XYZW][XYZW];//	行列スタック
+
+static ModelInfo asModelInfo[0x0100];					//	模型情報
+static Uint32 aiModelStorage[ModelStorageMax];			//	模型格納領域
+
+static Sflt32 afCalcVertex[0x0100][XYZW];				//	演算領域（模型頂点）
+static Uint08 aiCalcMaterial[0x0100][XYZW];				//	演算領域（多角材質）
+static TriInfo asCalcTriangle[0x0100];					//	演算領域（三角情報）
+#endif
+//------------------------------------------------------------------------------//
+#ifdef		BuildSlave
+static Sflt32 afMatrixStack[1][XYZW][XYZW];				//	行列スタック
+
+static ModelInfo asModelInfo[1];						//	模型情報
+static Uint32 aiModelStorage[1];						//	模型格納領域
+
+static Sflt32 afCalcVertex[1][XYZW];					//	演算領域（模型頂点）
+static Uint08 aiCalcMaterial[1][XYZW];					//	演算領域（多角材質）
+static TriInfo asCalcTriangle[1];						//	演算領域（三角情報）
+#endif
 //==============================================================================//
 
 
@@ -157,7 +215,7 @@ static void MatrixCrsVertex(Sflt32* pCrs, Sflt32* pV0, Sflt32* pV1, Sflt32* pV2)
 static void MatrixReset(void) {
 	Sint08 i;
 
-	iCurrMatrix = 0;
+	iCurrZ3dMatrix = 0;
 	fAmbiLight = 1.0;	fDiffLight = 0.0;
 
 	for(i = 0;i < XYZW;i++) {
@@ -200,16 +258,16 @@ static void MatrixParaLight(Sflt32* pVec) {
 
 //==============================================================================//
 static void MatrixPush(void) {
-	if(iCurrMatrix < (MatrixStackMax - 1)) iCurrMatrix++;
+	if(iCurrZ3dMatrix < (MatrixStackMax - 1)) iCurrZ3dMatrix++;
 }
 //------------------------------------------------------------------------------//
 static void MatrixPop(void) {
-	if(iCurrMatrix > 0) iCurrMatrix--;
+	if(iCurrZ3dMatrix > 0) iCurrZ3dMatrix--;
 }
 //------------------------------------------------------------------------------//
 static void MatrixUnit(void) {
 	Sint08 i, j;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	for(i = 0;i < XYZW;i++) {
 		for(j = 0;j < XYZW;j++) {
@@ -223,10 +281,10 @@ static void MatrixCopy(void) {
 	Sint08 i, j;
 	Sflt32 (* pSrc)[XYZW], (* pDst)[XYZW];
 
-	if(iCurrMatrix < 1) return;
+	if(iCurrZ3dMatrix < 1) return;
 
-	pSrc = afMatrixStack[iCurrMatrix - 1];
-	pDst = afMatrixStack[iCurrMatrix    ];
+	pSrc = afMatrixStack[iCurrZ3dMatrix - 1];
+	pDst = afMatrixStack[iCurrZ3dMatrix    ];
 
 	for(i = 0;i < XYZW;i++) {
 		for(j = 0;j < XYZW;j++) {
@@ -238,7 +296,7 @@ static void MatrixCopy(void) {
 static void MatrixRotateX(Sflt32 fRad) {
 	Sint08 i;
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	for(i = 0;i < XYZW;i++) {
 		fTmp = pMat[Y][i];	pMat[Y][i] = fCos * fTmp - fSin * pMat[Z][i];
@@ -249,7 +307,7 @@ static void MatrixRotateX(Sflt32 fRad) {
 static void MatrixRotateY(Sflt32 fRad) {
 	Sint08 i;
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	for(i = 0;i < XYZW;i++) {
 		fTmp = pMat[Z][i];	pMat[Z][i] = fCos * fTmp - fSin * pMat[X][i];
@@ -260,7 +318,7 @@ static void MatrixRotateY(Sflt32 fRad) {
 static void MatrixRotateZ(Sflt32 fRad) {
 	Sint08 i;
 	Sflt32 fTmp, fSin = sin(fRad), fCos = cos(fRad);
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	for(i = 0;i < XYZW;i++) {
 		fTmp = pMat[X][i];	pMat[X][i] = fCos * fTmp - fSin * pMat[Y][i];
@@ -271,12 +329,12 @@ static void MatrixRotateZ(Sflt32 fRad) {
 static void MatrixMultiply(Sint08 iLevel) {
 	Sint08 i, j;
 	Sflt32 (* pSrc)[XYZW], (* pDst)[XYZW];
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
-	if((iCurrMatrix < 1)||(iLevel >= iCurrMatrix)) return;
+	if((iCurrZ3dMatrix < 1)||(iLevel >= iCurrZ3dMatrix)) return;
 
 	pSrc = afMatrixStack[iLevel];
-	pDst = afMatrixStack[iCurrMatrix - 1];
+	pDst = afMatrixStack[iCurrZ3dMatrix - 1];
 
 	for(i = 0;i < XYZW;i++) {
 		for(j = 0;j < XYZW;j++) {
@@ -288,7 +346,7 @@ static void MatrixMultiply(Sint08 iLevel) {
 //------------------------------------------------------------------------------//
 static void MatrixTrans(Sflt32* pVec) {
 	Sint08 i;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	for(i = 0;i < XYZW;i++) {
 		pMat[W][i] =	pVec[X] * pMat[X][i] + pVec[Y] * pMat[Y][i] +
@@ -298,7 +356,7 @@ static void MatrixTrans(Sflt32* pVec) {
 //------------------------------------------------------------------------------//
 static void MatrixScale(Sflt32* pVec) {
 	Sint08 i, j;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	for(i = 0;i < XYZW;i++) {
 		for(j = 0;j < XYZW;j++) {
@@ -321,7 +379,7 @@ static void MatrixDevice(void) {
 static void MatrixPers(Sflt32 fRad, Sflt32 fNea, Sflt32 fFar) {
 	Sflt32 fPer = 1.0 / tan(fRad / 2.0);
 	Sflt32 fDis = fFar - fNea;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	pMat[X][X] = fPer;	pMat[X][Y] =		pMat[X][Z] =								pMat[X][W] = 0.0;
 	pMat[Y][X] = 0.0;	pMat[Y][Y] = fPer;	pMat[Y][Z] =								pMat[Y][W] = 0.0;
@@ -332,83 +390,74 @@ static void MatrixPers(Sflt32 fRad, Sflt32 fNea, Sflt32 fFar) {
 
 
 //==============================================================================//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-static Sflt32 afModelVertex[8][XYZW] = {
-	{	-1.0,	-1.0,	-1.0,	 1.0,	},
-	{	 1.0,	-1.0,	-1.0,	 1.0,	},
-	{	-1.0,	 1.0,	-1.0,	 1.0,	},
-	{	 1.0,	 1.0,	-1.0,	 1.0,	},
-	{	-1.0,	-1.0,	 1.0,	 1.0,	},
-	{	 1.0,	-1.0,	 1.0,	 1.0,	},
-	{	-1.0,	 1.0,	 1.0,	 1.0,	},
-	{	 1.0,	 1.0,	 1.0,	 1.0,	},
-};
-//------------------------------------------------------------------------------//
-static Uint08 aiModelPolygon[12][8] = {
-	{	0,	3,	1,	NUL,	NUL,	0xFF,	0xFF,	0x00,	},
-	{	0,	2,	3,	NUL,	NUL,	0xFF,	0xFF,	0x00,	},
-	{	1,	7,	5,	NUL,	NUL,	0xFF,	0x00,	0x00,	},
-	{	1,	3,	7,	NUL,	NUL,	0xFF,	0x00,	0x00,	},
-	{	2,	4,	6,	NUL,	NUL,	0xFF,	0x80,	0x00,	},
-	{	2,	0,	4,	NUL,	NUL,	0xFF,	0x80,	0x00,	},
-	{	3,	6,	7,	NUL,	NUL,	0x00,	0x00,	0xFF,	},
-	{	3,	2,	6,	NUL,	NUL,	0x00,	0x00,	0xFF,	},
-	{	4,	1,	5,	NUL,	NUL,	0x00,	0xFF,	0x00,	},
-	{	4,	0,	1,	NUL,	NUL,	0x00,	0xFF,	0x00,	},
-	{	5,	6,	4,	NUL,	NUL,	0xFF,	0xFF,	0xFF,	},
-	{	5,	7,	6,	NUL,	NUL,	0xFF,	0xFF,	0xFF,	},
-};
-//------------------------------------------------------------------------------//
-//			6----7
-//		   /|   /|
-//		  / |  / |
-//		 /  4-/--5
-//		2----3  /		Y  Z
-//		| /  | /		| /
-//		|/   |/			|/__X
-//		0----1
-//------------------------------------------------------------------------------//
-static Sflt32 afModelNormal[12][XYZW];
+static void MatrixClear(void) {
+	Sint16 i;
 
-static Sflt32 afCalcVertex[8][XYZW];
-static Uint32 aiCalcMaterial[12];
+	iCurrZ3dModel = 0;
+	iCurrZ3dStorage = 0;
+
+	iModelEntry = iModelShade = 0x0100;
+#ifdef		BuildMaster
+	for(i = 0;i < 0x0100;i++)	asModelInfo[i].ModelHead.iExternal = 0;
+#endif
+#ifdef		BuildSlave
+								asModelInfo[0].ModelHead.iExternal = 0;
+#endif
+}
 //------------------------------------------------------------------------------//
-static void MatrixNormal(void) {
+static void MatrixBuild(Uint08 iModel) {
+	Uint08 iVertex, iPolygon;
+	Uint16 iStorage = iCurrZ3dStorage;
+	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel = iModel]);
+
+	pModel->ModelHead.Internal.iVertexCount  = iVertex  = (Uint08)(aiCoordinate[X] & 0x00FF);
+	pModel->ModelHead.Internal.iPolygonCount = iPolygon = (Uint08)(aiCoordinate[Y] & 0x00FF);
+	pModel->ModelHead.Internal.iAttribute               = (Uint08)(aiCoordinate[Z] & 0x00FF);
+
+	pModel->pVertex   = (Sflt32(*)[XYZW])	(&(aiModelStorage[iStorage]));	iStorage += (Uint16)iVertex  * XYZW;
+	pModel->pNormal   = (Sflt32(*)[XYZW])	(&(aiModelStorage[iStorage]));	iStorage += (Uint16)iPolygon * XYZW;
+	pModel->pPolyInfo = (PolyInfo*)			(&(aiModelStorage[iStorage]));	iStorage += (Uint16)iPolygon * (sizeof(PolyInfo) >> 2);
+
+	if((iVertex == 0)||(iPolygon == 0)||(iStorage > ModelStorageMax)) {		pModel->ModelHead.iExternal = 0;	}
+	else {	iCurrZ3dStorage = iStorage;		pModel->ModelHead.Internal.iAllocate = True;	}
+}
+//------------------------------------------------------------------------------//
+static void MatrixVertex(Uint08 iVertex) {
 	Sint08 i;
-	Sflt32* pV0, * pV1, * pV2;
+	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel]);
 
-	for(i = 0;i < 12;i++) {
-		pV0 = afModelVertex[aiModelPolygon[i][0]];
-		pV1 = afModelVertex[aiModelPolygon[i][1]];
-		pV2 = afModelVertex[aiModelPolygon[i][2]];
-
-		MatrixCrsVertex(afModelNormal[i], pV0, pV1, pV2);
-		MatrixVecUnit(afModelNormal[i]);
+	if(iVertex < pModel->ModelHead.Internal.iVertexCount) {
+		for(i = 0;i < XYZW;i++) pModel->pVertex[iVertex][i] = afCoordinate[i];
 	}
 }
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //------------------------------------------------------------------------------//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//==============================================================================//
+static void MatrixPolygon(Uint08 iPolygon) {
+	Sint08 i;
+	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel]);
+	Sflt32* pV0, * pV1, * pV2;
 
+	if(iPolygon < pModel->ModelHead.Internal.iPolygonCount) {
+		for(i = 0;i < XYZW;i++) ((Sfix88*)(pModel->pPolyInfo + iPolygon))[i] = aiCoordinate[i];
 
-//==============================================================================//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-static void MatrixEntry(void) {
-	Sint08 i, j;
+		pV0 = pModel->pVertex[pModel->pPolyInfo[iPolygon].aiVertex[0]];
+		pV1 = pModel->pVertex[pModel->pPolyInfo[iPolygon].aiVertex[1]];
+		pV2 = pModel->pVertex[pModel->pPolyInfo[iPolygon].aiVertex[2]];
+
+		MatrixCrsVertex(pModel->pNormal[iPolygon], pV0, pV1, pV2);
+		MatrixVecUnit(pModel->pNormal[iPolygon]);
+	}
+}
+//------------------------------------------------------------------------------//
+static void MatrixEntry(Uint08 iModel) {
+	Sint16 i, j;
 	Sflt32 fTmp;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel = iModel]);
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
-	for(i = 0;i < 8;i++) {
+	for(i = 0;i < pModel->ModelHead.Internal.iVertexCount;i++) {
 		for(j = 0;j < XYZW;j++) {
-			afCalcVertex[i][j] =	afModelVertex[i][X] * pMat[X][j] + afModelVertex[i][Y] * pMat[Y][j] +
-									afModelVertex[i][Z] * pMat[Z][j] + afModelVertex[i][W] * pMat[W][j];
+			afCalcVertex[i][j] =	pModel->pVertex[i][X] * pMat[X][j] + pModel->pVertex[i][Y] * pMat[Y][j] +
+									pModel->pVertex[i][Z] * pMat[Z][j] + pModel->pVertex[i][W] * pMat[W][j];
 		}
 
 		fTmp = 1.0 / afCalcVertex[i][W];	afCalcVertex[i][W] = 1.0;
@@ -416,15 +465,16 @@ static void MatrixEntry(void) {
 	}
 }
 //------------------------------------------------------------------------------//
-static void MatrixShade(void) {
-	Sint08 i, j;
+static void MatrixShade(Uint08 iModel) {
+	Sint16 i, j;
 	Sflt32 fInr, afVec[XYZW];
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel = iModel]);
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
-	for(i = 0;i < 12;i++) {
+	for(i = 0;i < pModel->ModelHead.Internal.iPolygonCount;i++) {
 		for(j = 0;j < XYZW;j++) {
-			afVec[j] =	afModelNormal[i][X] * pMat[X][j] + afModelNormal[i][Y] * pMat[Y][j] +
-						afModelNormal[i][Z] * pMat[Z][j];
+			afVec[j] =	pModel->pNormal[i][X] * pMat[X][j] + pModel->pNormal[i][Y] * pMat[Y][j] +
+						pModel->pNormal[i][Z] * pMat[Z][j];
 		}
 
 		MatrixVecInner(&fInr, afVec, afParaLight);
@@ -432,42 +482,49 @@ static void MatrixShade(void) {
 		if(fInr < 0)	fInr = fAmbiLight;
 		else			fInr = fAmbiLight + fDiffLight * fInr;
 
-		for(j = 0;j < XYZW;j++) {
-			((Uint08*)(aiCalcMaterial + i))[j] = (Uint08)((Sflt32)aiModelPolygon[i][7 - j] * fInr);
+		for(j = 0;j < XYZ;j++) {
+			aiCalcMaterial[i][j] = (Uint08)((Sflt32)(pModel->pPolyInfo[i].aiMaterial[j]) * fInr);
 		}
 	}
 }
 //------------------------------------------------------------------------------//
 static void MatrixDraw(void) {
-	Uint08 iCount;
-	Sint08 i;
+	Sint16 i, iCount;
+	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel]);
+	Uint08 iBackJudge = pModel->ModelHead.Internal.iAttribute & MdlAttrBackJudge;
+	Uint08 iDepthSort = pModel->ModelHead.Internal.iAttribute & MdlAttrDepthSort;
 	Sflt32 afCrs[XYZW], * pV0, * pV1, * pV2;
-	static TriInfo asTriangle[12];
 
-	for(iCount = i = 0;i < 12;i++) {
-		pV0 = afCalcVertex[aiModelPolygon[i][0]];
-		pV1 = afCalcVertex[aiModelPolygon[i][1]];
-		pV2 = afCalcVertex[aiModelPolygon[i][2]];
+	for(iCount = i = 0;i < pModel->ModelHead.Internal.iPolygonCount;i++) {
+		pV0 = afCalcVertex[pModel->pPolyInfo[i].aiVertex[0]];
+		pV1 = afCalcVertex[pModel->pPolyInfo[i].aiVertex[1]];
+		pV2 = afCalcVertex[pModel->pPolyInfo[i].aiVertex[2]];
 
-		MatrixCrsVertex(afCrs, pV0, pV2, pV1);			//	Y軸反転済（デバイス座標系）
-
-		if(afCrs[Z] < 0) {
-			asTriangle[iCount].aiPos[0][X] = (Sint16)pV0[X];	asTriangle[iCount].aiPos[0][Y] = (Sint16)pV0[Y];
-			asTriangle[iCount].aiPos[1][X] = (Sint16)pV1[X];	asTriangle[iCount].aiPos[1][Y] = (Sint16)pV1[Y];
-			asTriangle[iCount].aiPos[2][X] = (Sint16)pV2[X];	asTriangle[iCount].aiPos[2][Y] = (Sint16)pV2[Y];
-			asTriangle[iCount++].iColor = aiCalcMaterial[i];
+		if(iBackJudge != False) {
+			MatrixCrsVertex(afCrs, pV0, pV2, pV1);		//	Y軸反転済（デバイス座標系）
+			if(afCrs[Z] > 0) continue;
 		}
+
+		asCalcTriangle[iCount].aiPos[0][X] = (Sint16)pV0[X];	asCalcTriangle[iCount].aiPos[0][Y] = (Sint16)pV0[Y];
+		asCalcTriangle[iCount].aiPos[1][X] = (Sint16)pV1[X];	asCalcTriangle[iCount].aiPos[1][Y] = (Sint16)pV1[Y];
+		asCalcTriangle[iCount].aiPos[2][X] = (Sint16)pV2[X];	asCalcTriangle[iCount].aiPos[2][Y] = (Sint16)pV2[Y];
+		asCalcTriangle[iCount++].iColor = *((Uint32*)(aiCalcMaterial[i]));
 	}
 
 	if(iCount > 0) {
 		MultiData(CodeTelZ3dPoly);	MultiData(iCount);
-		Serial1.write((Uint08*)asTriangle, sizeof(TriInfo) * iCount);
+		Serial1.write((Uint08*)asCalcTriangle, sizeof(TriInfo) * iCount);
 	}
 }
-//------------------------------------------------------------------------------//
+//==============================================================================//
+
+
+//==============================================================================//
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 static void MatrixPrint(void) {
 	Sint08 i, j;
-	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrMatrix];
+	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
 
 	for(i = 0;i < XYZW;i++) {
 		for(j = 0;j < XYZW;j++) {
@@ -479,7 +536,11 @@ static void MatrixPrint(void) {
 
 	Serial.println();
 }
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //------------------------------------------------------------------------------//
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 static void VertexPrint(void) {
 	Sint08 i, j;
 
@@ -498,14 +559,6 @@ static void VertexPrint(void) {
 //------------------------------------------------------------------------------//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//==============================================================================//
-
-
-//==============================================================================//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 static void MatrixFrameRate(void) {
 	static Uint32 iCount = 0;
 	static Uint32 iFrame = 0;
@@ -522,25 +575,20 @@ static void MatrixFrameRate(void) {
 }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//------------------------------------------------------------------------------//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //==============================================================================//
 
 
 //==============================================================================//
 static void Z3dApiInit(void) {
-	MatrixReset();	MatrixUnit();
-	iCurrZ3dMode = Z3dModeStandBy;
+	MatrixReset();	MatrixUnit();	MatrixClear();
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiFlushScrn(void) {
 	MultiData(CodeTelZ3dFlush);
 	MultiWait(CodeTelZ3dFlush);
 
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
 /*@@@@
@@ -554,7 +602,7 @@ static void Z3dApiAmbiLight(void) {
 	fAmbiLight = (Sflt32)iPioDataBus / 255.0;
 	MatrixAmbiLight();
 
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiDiffLight(void) {
@@ -562,159 +610,149 @@ static void Z3dApiDiffLight(void) {
 	MatrixDiffLight();
 
 	MatrixParaLight(afCoordinate);
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatPush(void) {
 	MatrixPush();
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatPop(void) {
 	MatrixPop();
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatUnit(void) {
 	MatrixUnit();
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatCopy(void) {
 	MatrixCopy();
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatRotX(void) {
 	MatrixRotateX(PI * (Sflt32)(Sint08)iPioDataBus / 128.0);
-	iCurrZ3dMode = Z3dModeStandBy;						//	【注意】±境界条件
+	iCurrZ3dProc = Z3dProcStandBy;						//	【注意】±境界条件
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatRotY(void) {
 	MatrixRotateY(PI * (Sflt32)(Sint08)iPioDataBus / 128.0);
-	iCurrZ3dMode = Z3dModeStandBy;						//	【注意】±境界条件
+	iCurrZ3dProc = Z3dProcStandBy;						//	【注意】±境界条件
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatRotZ(void) {
 	MatrixRotateZ(PI * (Sflt32)(Sint08)iPioDataBus / 128.0);
-	iCurrZ3dMode = Z3dModeStandBy;						//	【注意】±境界条件
+	iCurrZ3dProc = Z3dProcStandBy;						//	【注意】±境界条件
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatMulti(void) {
 	MatrixMultiply((Sint08)iPioDataBus);
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatTrans(void) {
 	MatrixTrans(afCoordinate);
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatScale(void) {
 	MatrixScale(afCoordinate);
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatDevice(void) {
 	MatrixDevice();
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMatPers(void) {
 	MatrixPers(PI * (Sflt32)iPioDataBus / 256.0, afCoordinate[X], afCoordinate[Y]);
-	iCurrZ3dMode = Z3dModeStandBy;						//	【注意】角度の縮尺をRotateXYZに合わせる
+	iCurrZ3dProc = Z3dProcStandBy;						//	【注意】角度の縮尺をRotateXYZに合わせる
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMdlClear(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	MatrixClear();
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMdlBuild(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	MatrixBuild(iPioDataBus);
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMdlVertex(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	MatrixVertex(iPioDataBus);
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMdlPoly(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	MatrixPolygon(iPioDataBus);
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMdlEntry(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	iModelEntry = (Uint16)iPioDataBus;	MatrixEntry(iPioDataBus);
+	if(iModelEntry == iModelShade) {	iModelEntry = iModelShade = 0x0100;		MatrixDraw();	}
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiMdlShade(void) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
+	iModelShade = (Uint16)iPioDataBus;	MatrixShade(iPioDataBus);
+	if(iModelEntry == iModelShade) {	iModelEntry = iModelShade = 0x0100;		MatrixDraw();	}
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorXL(void) {
 	afCoordinate[X] = FixToFlt(aiCoordinate[X] = (aiCoordinate[X] & 0xFF00) | ((Sfix88)iPioDataBus));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorXH(void) {
 	afCoordinate[X] = FixToFlt(aiCoordinate[X] = (aiCoordinate[X] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorYL(void) {
 	afCoordinate[Y] = FixToFlt(aiCoordinate[Y] = (aiCoordinate[Y] & 0xFF00) | ((Sfix88)iPioDataBus));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorYH(void) {
 	afCoordinate[Y] = FixToFlt(aiCoordinate[Y] = (aiCoordinate[Y] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorZL(void) {
 	afCoordinate[Z] = FixToFlt(aiCoordinate[Z] = (aiCoordinate[Z] & 0xFF00) | ((Sfix88)iPioDataBus));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorZH(void) {
 	afCoordinate[Z] = FixToFlt(aiCoordinate[Z] = (aiCoordinate[Z] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorWL(void) {
 	afCoordinate[W] = FixToFlt(aiCoordinate[W] = (aiCoordinate[W] & 0xFF00) | ((Sfix88)iPioDataBus));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorWH(void) {
 	afCoordinate[W] = FixToFlt(aiCoordinate[W] = (aiCoordinate[W] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //==============================================================================//
 
 
 //==============================================================================//
 static void Z3dApiStandBy(void) {
-	iCurrZ3dMode = Z3dModeStandBy;
+	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
-static void (* apZ3dApiMode[Z3dModeMax])(void) = {
+static void (* apZ3dApiProc[Z3dProcMax])(void) = {
 	Z3dApiStandBy  ,
 
 	Z3dApiInit     ,	Z3dApiFlushScrn,	Z3dApiAmbiLight,	Z3dApiDiffLight,
@@ -734,26 +772,18 @@ static void (* apZ3dApiMode[Z3dModeMax])(void) = {
 
 //==============================================================================//
 static void MatrixInit(Sint08 iReset) {
+	iCurrZ3dProc = Z3dProcStandBy;
+	MatrixReset();	MatrixUnit();	MatrixClear();
+
 	if(Esp32Slave) {
-		if(iReset != False) Canvas.fillScreen(iLcdRgbC1);
-		return;
+		if(iReset == False)		Canvas.createSprite(LcdCnvsPixelX, LcdCnvsPixelY);
+		else					Canvas.fillScreen(iLcdRgbC1);
 	}
-
-	if(iReset == False) {
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-		MatrixNormal();
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-	}
-
-	iCurrZ3dMode = Z3dModeStandBy;
-	MatrixReset();	MatrixUnit();
 }
 //------------------------------------------------------------------------------//
 static void MatrixMove(void) {
 	if(Esp32Slave) return;
-	(* apZ3dApiMode[iCurrZ3dMode])();
+	(* apZ3dApiProc[iCurrZ3dProc])();
 }
 //==============================================================================//
 
