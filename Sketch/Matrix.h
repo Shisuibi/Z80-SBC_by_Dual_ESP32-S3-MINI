@@ -54,10 +54,10 @@ enum {
 #define		Z3dMatrixMax				0x10			//	行列スタック上限
 
 #define		ModelStorageMax				0x9800			//	模型格納領域上限
-#define		Z3dModelMax					0x0100			//	模型追加上限
-
-#define		Z3dVertexMax				0xFF			//	頂点追加上限
-#define		Z3dPolygonMax				0xFF			//	多角追加上限
+#define		Z3dModelMax					0x0100			//	模型追加上限 ※
+														//	※【注意】上限検査省略
+#define		Z3dVertexMax				0xFF			//	頂点追加上限 ※
+#define		Z3dPolygonMax				0xFF			//	多角追加上限 ※
 //------------------------------------------------------------------------------//
 #define		FixedDecimalSize			8				//	小数ビット長
 
