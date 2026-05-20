@@ -328,7 +328,7 @@ static void VportLcdDrawChar(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdRgbC0L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdRgbC0 & 0x00FF);
-	else			iLcdRgbC0 = (iLcdRgbC0 & 0xFF00) | ((Uint16)iPioDataBus);
+	else			iLcdRgbC0 = (iLcdRgbC0 & 0xFF00) | (((Uint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdRgbC0H(void) {
@@ -338,7 +338,7 @@ static void VportLcdRgbC0H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdRgbC1L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdRgbC1 & 0x00FF);
-	else			iLcdRgbC1 = (iLcdRgbC1 & 0xFF00) | ((Uint16)iPioDataBus);
+	else			iLcdRgbC1 = (iLcdRgbC1 & 0xFF00) | (((Uint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdRgbC1H(void) {
@@ -433,7 +433,7 @@ static void VportLcdFillCrcl(void) {
 //==============================================================================//
 static void VportLcdPosX0L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdPosX0 & 0x00FF);
-	else			iLcdPosX0 = (iLcdPosX0 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdPosX0 = (iLcdPosX0 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdPosX0H(void) {
@@ -443,7 +443,7 @@ static void VportLcdPosX0H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdPosY0L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdPosY0 & 0x00FF);
-	else			iLcdPosY0 = (iLcdPosY0 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdPosY0 = (iLcdPosY0 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdPosY0H(void) {
@@ -453,7 +453,7 @@ static void VportLcdPosY0H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdPosX1L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdPosX1 & 0x00FF);
-	else			iLcdPosX1 = (iLcdPosX1 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdPosX1 = (iLcdPosX1 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdPosX1H(void) {
@@ -463,7 +463,7 @@ static void VportLcdPosX1H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdPosY1L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdPosY1 & 0x00FF);
-	else			iLcdPosY1 = (iLcdPosY1 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdPosY1 = (iLcdPosY1 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdPosY1H(void) {
@@ -473,7 +473,7 @@ static void VportLcdPosY1H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdDisX2L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdDisX2 & 0x00FF);
-	else			iLcdDisX2 = (iLcdDisX2 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdDisX2 = (iLcdDisX2 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdDisX2H(void) {
@@ -483,7 +483,7 @@ static void VportLcdDisX2H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdDisY2L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdDisY2 & 0x00FF);
-	else			iLcdDisY2 = (iLcdDisY2 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdDisY2 = (iLcdDisY2 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdDisY2H(void) {
@@ -493,7 +493,7 @@ static void VportLcdDisY2H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdRadX3L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdRadX3 & 0x00FF);
-	else			iLcdRadX3 = (iLcdRadX3 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdRadX3 = (iLcdRadX3 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdRadX3H(void) {
@@ -503,7 +503,7 @@ static void VportLcdRadX3H(void) {
 //------------------------------------------------------------------------------//
 static void VportLcdRadY3L(void) {
 	if(PioInput)	iPioDataBus = (Uint08)(iLcdRadY3 & 0x00FF);
-	else			iLcdRadY3 = (iLcdRadY3 & 0xFF00) | (Sint16)iPioDataBus;
+	else			iLcdRadY3 = (iLcdRadY3 & 0xFF00) | (((Sint16)iPioDataBus) << 0);
 }
 //------------------------------------------------------------------------------//
 static void VportLcdRadY3H(void) {

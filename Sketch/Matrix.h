@@ -59,23 +59,8 @@ enum {
 #define		Z3dVertexMax				0xFF			//	頂点追加上限 ※
 #define		Z3dPolygonMax				0xFF			//	多角追加上限 ※
 //------------------------------------------------------------------------------//
-#define		FixedDecimalSize			8				//	小数ビット長
-
-#define		FloatExponentBias			127				//	指数バイアス
-#define		FloatFractionSize			23				//	仮数ビット長
-//------------------------------------------------------------------------------//
 #define		MdlAttrBackJudge			0x01			//	模型描画属性（裏面判定）
 #define		MdlAttrDepthSort			0x80			//	模型描画属性（奥行整列）
-//------------------------------------------------------------------------------//
-typedef union tCoordinate {
-	struct tInternal {
-		Uint32				iFraction : 23;				//	内部ビット（仮数）
-		Uint32				iExponent : 8;				//	内部ビット（指数）
-		Uint32				iSign : 1;					//	内部ビット（符号）
-	} Internal;											//	内部形式
-
-	Sflt32				fFloat;							//	浮動小数点数
-} Coordinate;											//	演算座標
 //------------------------------------------------------------------------------//
 typedef struct tPolyInfo {
 	Uint08				aiVertex[XYZ];					//	多角頂点
@@ -171,34 +156,6 @@ static Sflt32 afCalcVertex[1][XYZW];					//	演算領域（模型頂点）
 static MaterialInfo asCalcMaterial[1];					//	演算領域（多角材質）
 static TriangleInfo asCalcTriangle[1];					//	演算領域（三角情報）
 #endif
-//==============================================================================//
-
-
-//==============================================================================//
-static int MatrixCompare(const void* pDSL, const void* pDSR) {
-	Sflt32 fPCL = asCalcMaterial[*(Uint08*)pDSL].fCenter;
-	Sflt32 fPCR = asCalcMaterial[*(Uint08*)pDSR].fCenter;
-
-	return((fPCL < fPCR) - (fPCL > fPCR));
-}
-//------------------------------------------------------------------------------//
-static Sflt32 FixToFlt(Sfix88 iFix) {
-	Coordinate uCoordinate;
-	Sint08 iDigit, iShift;
-
-	if(uCoordinate.Internal.iSign = iFix < 0) iFix = -iFix;
-	iDigit = 31 - __builtin_clz(iFix);
-
-	if(iFix == 0)	uCoordinate.Internal.iExponent = 0;
-	else			uCoordinate.Internal.iExponent = iDigit - FixedDecimalSize + FloatExponentBias;
-
-	iShift = iDigit - FloatFractionSize;
-
-	if(iShift < 0)	uCoordinate.Internal.iFraction = iFix << -iShift;
-	else			uCoordinate.Internal.iFraction = iFix >>  iShift;
-
-	return(uCoordinate.fFloat);
-}
 //==============================================================================//
 
 
@@ -475,9 +432,9 @@ static void MatrixPolygon(Uint08 iPolygon) {
 //------------------------------------------------------------------------------//
 static void MatrixEntry(Uint08 iModel) {
 	Sint16 i, j;
-	Sflt32 fTmp;
 	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel = iModel]);
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
+	Sflt32 fTmp;
 
 	for(i = 0;i < pModel->ModelHead.Internal.iVertexCount;i++) {
 		for(j = X;j < XYZW;j++) {
@@ -485,16 +442,16 @@ static void MatrixEntry(Uint08 iModel) {
 									pModel->pVertex[i][Z] * pMat[Z][j] + pModel->pVertex[i][W] * pMat[W][j];
 		}
 
-		fTmp = 1.0 / afCalcVertex[i][W];	afCalcVertex[i][W] = 1.0;
+		fTmp = 1.0 / fabs(afCalcVertex[i][W]);
 		for(j = X;j < XYZ;j++) afCalcVertex[i][j] *= fTmp;
 	}
 }
 //------------------------------------------------------------------------------//
 static void MatrixShade(Uint08 iModel) {
 	Sint16 i, j;
-	Sflt32 fInr, afVec[XYZW];
 	ModelInfo* pModel = &(asModelInfo[iCurrZ3dModel = iModel]);
 	Sflt32 (* pMat)[XYZW] = afMatrixStack[iCurrZ3dMatrix];
+	Sflt32 fInr, afVec[XYZW];
 
 	for(i = 0;i < pModel->ModelHead.Internal.iPolygonCount;i++) {
 		for(j = X;j < XYZW;j++) {
@@ -511,6 +468,13 @@ static void MatrixShade(Uint08 iModel) {
 			asCalcMaterial[i].aiMaterial[j] = (Uint08)((Sflt32)(pModel->pPolyInfo[i].aiMaterial[j]) * fInr);
 		}
 	}
+}
+//------------------------------------------------------------------------------//
+static int MatrixCompare(const void* pDSL, const void* pDSR) {
+	Sflt32 fPCL = asCalcMaterial[*(Uint08*)pDSL].fCenter;
+	Sflt32 fPCR = asCalcMaterial[*(Uint08*)pDSR].fCenter;
+
+	return((fPCL < fPCR) - (fPCL > fPCR));
 }
 //------------------------------------------------------------------------------//
 static void MatrixDraw(void) {
@@ -536,12 +500,16 @@ static void MatrixDraw(void) {
 
 	for(iCount = i = 0;i < pModel->ModelHead.Internal.iPolygonCount;i++) {
 		apPos[X] = afCalcVertex[pModel->pPolyInfo[aiCalcDepthSort[i]].aiVertex[X]];
-		apPos[Y] = afCalcVertex[pModel->pPolyInfo[aiCalcDepthSort[i]].aiVertex[Z]];	//	Y軸反転済（デバイス座標系）
-		apPos[Z] = afCalcVertex[pModel->pPolyInfo[aiCalcDepthSort[i]].aiVertex[Y]];	//	Y軸反転済（デバイス座標系）
+		apPos[Y] = afCalcVertex[pModel->pPolyInfo[aiCalcDepthSort[i]].aiVertex[Z]];		//	Y軸反転済（デバイス座標系）
+		apPos[Z] = afCalcVertex[pModel->pPolyInfo[aiCalcDepthSort[i]].aiVertex[Y]];		//	Y軸反転済（デバイス座標系）
+
+		if((apPos[X][Z] < 0.0)||(apPos[X][Z] > 2.0)) continue;
+		if((apPos[Y][Z] < 0.0)||(apPos[X][Z] > 2.0)) continue;
+		if((apPos[Z][Z] < 0.0)||(apPos[X][Z] > 2.0)) continue;
 
 		if(iBackJudge != False) {
 			MatrixPosCross(afCrs, apPos);
-			if(afCrs[Z] > 0) continue;
+			if(afCrs[Z] > 0.0) continue;
 		}
 
 		for(j = X;j < XYZ;j++) {
@@ -718,42 +686,42 @@ static void Z3dApiMdlShade(void) {
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorXL(void) {
-	afCoordinate[X] = FixToFlt(aiCoordinate[X] = (aiCoordinate[X] & 0xFF00) | ((Sfix88)iPioDataBus));
+	afCoordinate[X] = (Sflt32)(aiCoordinate[X] = (aiCoordinate[X] & 0xFF00) | (((Sfix88)iPioDataBus) << 0)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorXH(void) {
-	afCoordinate[X] = FixToFlt(aiCoordinate[X] = (aiCoordinate[X] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
+	afCoordinate[X] = (Sflt32)(aiCoordinate[X] = (aiCoordinate[X] & 0x00FF) | (((Sfix88)iPioDataBus) << 8)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorYL(void) {
-	afCoordinate[Y] = FixToFlt(aiCoordinate[Y] = (aiCoordinate[Y] & 0xFF00) | ((Sfix88)iPioDataBus));
+	afCoordinate[Y] = (Sflt32)(aiCoordinate[Y] = (aiCoordinate[Y] & 0xFF00) | (((Sfix88)iPioDataBus) << 0)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorYH(void) {
-	afCoordinate[Y] = FixToFlt(aiCoordinate[Y] = (aiCoordinate[Y] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
+	afCoordinate[Y] = (Sflt32)(aiCoordinate[Y] = (aiCoordinate[Y] & 0x00FF) | (((Sfix88)iPioDataBus) << 8)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorZL(void) {
-	afCoordinate[Z] = FixToFlt(aiCoordinate[Z] = (aiCoordinate[Z] & 0xFF00) | ((Sfix88)iPioDataBus));
+	afCoordinate[Z] = (Sflt32)(aiCoordinate[Z] = (aiCoordinate[Z] & 0xFF00) | (((Sfix88)iPioDataBus) << 0)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorZH(void) {
-	afCoordinate[Z] = FixToFlt(aiCoordinate[Z] = (aiCoordinate[Z] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
+	afCoordinate[Z] = (Sflt32)(aiCoordinate[Z] = (aiCoordinate[Z] & 0x00FF) | (((Sfix88)iPioDataBus) << 8)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorWL(void) {
-	afCoordinate[W] = FixToFlt(aiCoordinate[W] = (aiCoordinate[W] & 0xFF00) | ((Sfix88)iPioDataBus));
+	afCoordinate[W] = (Sflt32)(aiCoordinate[W] = (aiCoordinate[W] & 0xFF00) | (((Sfix88)iPioDataBus) << 0)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //------------------------------------------------------------------------------//
 static void Z3dApiVectorWH(void) {
-	afCoordinate[W] = FixToFlt(aiCoordinate[W] = (aiCoordinate[W] & 0x00FF) | (((Sfix88)iPioDataBus) << 8));
+	afCoordinate[W] = (Sflt32)(aiCoordinate[W] = (aiCoordinate[W] & 0x00FF) | (((Sfix88)iPioDataBus) << 8)) / 256.0;
 	iCurrZ3dProc = Z3dProcStandBy;
 }
 //==============================================================================//
